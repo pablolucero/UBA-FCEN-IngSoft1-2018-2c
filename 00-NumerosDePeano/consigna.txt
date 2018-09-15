@@ -1,0 +1,20 @@
+Quinta Actividad: Números de Peano
+
+Analice la definición axiomática de Peano de los números naturales. Si lo necesita busque un libro en biblioteca o navegue por Internet. Lea los axiomas. E intente representar los números de Peano con objetos.
+
+Llamará al primer número I, al segundo número II, al tercero III, al cuarto IIII, al cinco IIIII y así sucesivamente.
+
+Inicialmente concentrense en representar el I y el II.
+
+Vaya definiendo los métodos necesarios para que los números de Peano por usted definidos sepan responder los mensajes: previous, next, + unNumeroDePeano, - unNumeroDePeano, * unNumeroDePeano, / unNumeroDePeano. En ese orden, deje la división para el final que es más dificil.
+
+Cuando al II se le envíe el mensaje next, automáticamente se debe crear el III y así sucesivamente. Cuando se multipliquen números también automáticamente se deberán crear los números que esa multiplicación abarque, entre ellos el resultado (por ejemplo II * II generará el III y el IIII si aún no están representados y retornará el IIII).
+
+Para la división, puede definirla de modo que retorne la parte natural (IIII/III retorna I) o bien que solo funcione para divisiones de resultado natural y cuando se pretende dividir números que no se dividen haya un error (ej IIII/III genera un error).
+
+-----------------------------------------------------------
+Deben entregar el ejercicio resuelto de números de Peano. Para ello deben hacer file-out de lo que representaron y subirlo al repo de su grupo dentro de una carpeta que llamarán 00-NumerosDePeano. Deadline: 17 de septiembre a las 17hs.
+
+Recuerde que en los métodos *, + y - no debe haber ningún if. Asegúrese también de cumplir con el enunciado del ejercicio, para ello le adjuntamos un conjunto de tests que deben pasar (haga file-in del archivo y asegúrese antes que en su ambiente existan al menos los objetos I, II, III y IIII. Para que pasen los tests 05 y 12 tendrá que realizar un extract method de los mensajes de error que nombrará descripcionDeErrorDeNumerosNegativosNoSoportados y descripcionDeErrorDeNoSePuedeDividirPorUnNumeroMayor ).
+
+La entrega es obligatoria. En caso de no haber hecho nada deben enviar un mail explicando por qué no han podido trabajar. De este modo la cátedra tendrá un feedback de ustedes acerca de cómo van y qué dificultades tienen. El ejercicio se corregirá y se devolverá, de modo que ustedes también tendrán feedback de cómo se encuentran para afrontar los próximos TPs que serán evaluados con nota numérica.
