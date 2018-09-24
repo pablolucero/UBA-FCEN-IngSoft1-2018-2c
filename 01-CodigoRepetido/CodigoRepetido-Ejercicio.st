@@ -182,47 +182,47 @@ test08CanNotSuspendAnAlreadySuspendedCustomer
 
 !classDefinition: #CustomerBook category: #'CodigoRepetido-Ejercicio'!
 Object subclass: #CustomerBook
-	instanceVariableNames: 'customers suspended'
+	instanceVariableNames: 'suspended active'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'CodigoRepetido-Ejercicio'!
 
-!CustomerBook methodsFor: 'testing' stamp: 'HAW 9/19/2018 08:40:28'!
+!CustomerBook methodsFor: 'testing' stamp: 'PML 9/24/2018 01:51:39'!
 includesCustomerNamed: aName
 
-	^(customers includes: aName) or: [ suspended includes: aName ]! !
+	^(active includes: aName) or: [ suspended includes: aName ]! !
 
-!CustomerBook methodsFor: 'testing' stamp: 'HAW 9/19/2018 08:40:38'!
+!CustomerBook methodsFor: 'testing' stamp: 'PML 9/24/2018 01:51:39'!
 isEmpty
 	
-	^customers isEmpty and: [ suspended isEmpty ]! !
+	^active isEmpty and: [ suspended isEmpty ]! !
 
 
-!CustomerBook methodsFor: 'initialization' stamp: 'NicolasRinaldi 9/16/2018 21:55:33'!
+!CustomerBook methodsFor: 'initialization' stamp: 'PML 9/24/2018 01:51:39'!
 initialize
 
 	super initialize.
-	customers := OrderedCollection new.
+	active := OrderedCollection new.
 	suspended:= OrderedCollection new.! !
 
 
-!CustomerBook methodsFor: 'customer management' stamp: 'PML 9/23/2018 02:51:43'!
+!CustomerBook methodsFor: 'customer management' stamp: 'PML 9/24/2018 01:51:39'!
 addCustomerNamed: aName
 
 	aName isEmpty ifTrue: [ self signalCustomerNameCannotBeEmpty ].
 	(self includesCustomerNamed: aName) ifTrue: [ self signalCustomerAlreadyExists ].
 	
-	customers add: aName ! !
+	active add: aName ! !
 
-!CustomerBook methodsFor: 'customer management' stamp: 'NR 9/19/2018 17:36:57'!
+!CustomerBook methodsFor: 'customer management' stamp: 'PML 9/24/2018 01:51:39'!
 numberOfActiveCustomers
 	
-	^customers size! !
+	^active size! !
 
-!CustomerBook methodsFor: 'customer management' stamp: 'NicolasRinaldi 9/16/2018 22:01:43'!
+!CustomerBook methodsFor: 'customer management' stamp: 'PML 9/24/2018 01:51:39'!
 numberOfCustomers
 	
-	^customers size + suspended size! !
+	^active size + suspended size! !
 
 !CustomerBook methodsFor: 'customer management' stamp: 'NR 9/19/2018 17:36:09'!
 numberOfSuspendedCustomers
@@ -235,12 +235,12 @@ remove: anObject from: aCollection
 	aCollection remove: anObject ifAbsent: [ ^ false ]. 
 	^ true ! !
 
-!CustomerBook methodsFor: 'customer management' stamp: 'PML 9/23/2018 14:27:02'!
+!CustomerBook methodsFor: 'customer management' stamp: 'PML 9/24/2018 01:51:39'!
 removeCustomerNamed: aName 
 
 	( self includesCustomerNamed: aName ) 
 		
-		ifTrue: [ self remove: aName from: customers. 
+		ifTrue: [ self remove: aName from: active. 
 		    	  self remove: aName from: suspended ] 
 		
 		ifFalse: [^ NotFound signal.].! !
@@ -255,12 +255,12 @@ signalCustomerNameCannotBeEmpty
 
 	self error: self class customerCanNotBeEmptyErrorMessage ! !
 
-!CustomerBook methodsFor: 'customer management' stamp: 'NR 9/19/2018 17:27:55'!
+!CustomerBook methodsFor: 'customer management' stamp: 'PML 9/24/2018 01:51:39'!
 suspendCustomerNamed: aName 
 	
-	(customers includes: aName) ifFalse: [^CantSuspend signal].
+	(active includes: aName) ifFalse: [^CantSuspend signal].
 	
-	customers remove: aName.
+	active remove: aName.
 	
 	suspended add: aName
 ! !
