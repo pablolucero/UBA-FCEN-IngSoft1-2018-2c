@@ -324,6 +324,11 @@ negated
 	
 	^self * (Entero with: -1)! !
 
+!Numero methodsFor: 'arithmetic operations' stamp: 'PML 9/27/2018 20:44:02'!
+sumarseConEntero: anAdderEntero 
+	
+	self subclassResponsibility ! !
+
 
 !Numero methodsFor: 'testing' stamp: 'HGZ 9/26/2018 16:05:52'!
 isInteger
@@ -375,19 +380,15 @@ Numero subclass: #Entero
 	
 	^aMultiplier * self! !
 
-!Entero methodsFor: 'arithmetic operations' stamp: 'HGZ 9/26/2018 16:20:28'!
+!Entero methodsFor: 'arithmetic operations' stamp: 'PML 9/27/2018 21:35:09'!
 + anAdder 
 
-	anAdder isInteger ifTrue: [^self class with: value + anAdder integerValue].
-	
-	^anAdder + self! !
+	^ anAdder sumarseConEntero: self! !
 
-!Entero methodsFor: 'arithmetic operations' stamp: 'HGZ 9/26/2018 17:15:01'!
+!Entero methodsFor: 'arithmetic operations' stamp: 'PML 9/27/2018 21:55:52'!
 - aSubtrahend 
 	
-	aSubtrahend isInteger ifTrue: [^self class with: value - aSubtrahend integerValue].
-	
-	^(aSubtrahend - self) negated! !
+	^ aSubtrahend restarseConEntero: self! !
 
 !Entero methodsFor: 'arithmetic operations' stamp: 'HGZ 9/26/2018 17:10:48'!
 / aDivisor 
@@ -419,6 +420,26 @@ fibonacci
 greatestCommonDivisorWith: anEntero 
 	
 	^self class with: (value gcd: anEntero integerValue)! !
+
+!Entero methodsFor: 'arithmetic operations' stamp: 'PML 9/28/2018 01:29:58'!
+restarseConEntero: aSubtrahend 
+	
+	^ aSubtrahend integerValue - (self integerValue)! !
+
+!Entero methodsFor: 'arithmetic operations' stamp: 'PML 9/27/2018 21:53:40'!
+restarseConFraccion: aSubtrahend 
+	
+	| newNumerator newDenominator |
+	
+	newNumerator := aSubtrahend numerator - (aSubtrahend denominator * self ).
+	newDenominator := aSubtrahend denominator.
+
+	^newNumerator / newDenominator ! !
+
+!Entero methodsFor: 'arithmetic operations' stamp: 'PML 9/27/2018 20:44:37'!
+sumarseConEntero: anAdderEntero
+
+	^self class with: self integerValue + anAdderEntero integerValue! !
 
 
 !Entero methodsFor: 'comparing' stamp: 'HernanWilkinson 5/7/2016 21:01'!
@@ -534,23 +555,10 @@ Numero subclass: #Fraccion
 	].	
 	^newNumerator / newDenominator ! !
 
-!Fraccion methodsFor: 'arithmetic operations' stamp: 'HGZ 9/26/2018 16:51:35'!
+!Fraccion methodsFor: 'arithmetic operations' stamp: 'PML 9/27/2018 21:55:43'!
 - aSubtrahend 
 
-	| newNumerator newDenominator |
-	
-	aSubtrahend isInteger ifTrue: [
-
-		newNumerator := numerator - (denominator * aSubtrahend ).
-		newDenominator := denominator.
-
-	] ifFalse: [
-
-		newNumerator := (numerator * aSubtrahend denominator) - (denominator * aSubtrahend numerator).
-		newDenominator := denominator * aSubtrahend denominator.
-
-	].	
-	^newNumerator / newDenominator 
+	^ aSubtrahend restarseConFraccion: self
 ! !
 
 !Fraccion methodsFor: 'arithmetic operations' stamp: 'HGZ 9/26/2018 16:46:18'!
@@ -574,6 +582,46 @@ Numero subclass: #Fraccion
 !Fraccion methodsFor: 'arithmetic operations' stamp: 'HGZ 9/26/2018 17:12:38'!
 inverse
 	^(denominator / numerator)! !
+
+!Fraccion methodsFor: 'arithmetic operations' stamp: 'PML 9/27/2018 21:54:34'!
+restarseConEntero: aSubtrahend 
+
+	| newNumerator newDenominator |
+	
+	newNumerator := (denominator * aSubtrahend ) - numerator.
+	newDenominator := denominator.
+
+	^newNumerator / newDenominator 
+! !
+
+!Fraccion methodsFor: 'arithmetic operations' stamp: 'PML 9/27/2018 21:54:18'!
+restarseConFraccion: aSubtrahend 
+
+	| newNumerator newDenominator |
+	
+	newNumerator := (denominator * aSubtrahend numerator) - (numerator * aSubtrahend denominator).
+	newDenominator := denominator * aSubtrahend denominator.
+
+	^newNumerator / newDenominator 
+! !
+
+!Fraccion methodsFor: 'arithmetic operations' stamp: 'PML 9/27/2018 20:47:51'!
+sumarseConEntero: anAdderEntero 
+	
+	| newDenominator newNumerator |
+	newNumerator := numerator + (denominator * anAdderEntero).
+	newDenominator := denominator.
+	
+	^newNumerator / newDenominator! !
+
+!Fraccion methodsFor: 'arithmetic operations' stamp: 'PML 9/27/2018 21:45:08'!
+sumarseConFraccion: anAdderFraction 
+	
+	| newNumerator newDenominator |
+		newNumerator := (numerator * anAdderFraction denominator) + (denominator * anAdderFraction numerator).
+		newDenominator := denominator * anAdderFraction denominator.
+
+	^newNumerator / newDenominator ! !
 
 
 !Fraccion methodsFor: 'comparing' stamp: 'HernanWilkinson 5/7/2016 20:42'!
