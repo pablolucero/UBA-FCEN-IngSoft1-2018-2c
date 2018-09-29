@@ -135,6 +135,42 @@ Object subclass: #Queue
 	poolDictionaries: ''
 	category: 'Queue-Exercise'!
 
+!Queue methodsFor: 'initialization' stamp: 'PML 9/29/2018 00:40:35'!
+initialize
+
+	super initialize.
+	contents := OrderedCollection new.! !
+
+
+!Queue methodsFor: 'testing' stamp: 'PML 9/29/2018 00:45:48'!
+isEmpty
+	
+	^ contents isEmpty! !
+
+!Queue methodsFor: 'testing' stamp: 'PML 9/29/2018 01:58:22'!
+size
+
+	^ contents size! !
+
+
+!Queue methodsFor: 'operations' stamp: 'PML 9/29/2018 02:29:12'!
+dequeue
+	
+	contents isEmpty ifTrue: [ self error: Queue queueEmptyErrorDescription ].
+	^ contents removeFirst! !
+
+!Queue methodsFor: 'operations' stamp: 'PML 9/29/2018 01:01:49'!
+enqueue: anElement 
+	
+	^ contents add: anElement.
+! !
+
+!Queue methodsFor: 'operations' stamp: 'PML 9/29/2018 02:27:09'!
+next
+
+	contents isEmpty ifTrue: [ self error: Queue queueEmptyErrorDescription ].
+	^ contents at: (contents size) ! !
+
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
 !classDefinition: 'Queue class' category: #'Queue-Exercise'!
