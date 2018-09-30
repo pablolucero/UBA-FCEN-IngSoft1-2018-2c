@@ -324,11 +324,6 @@ negated
 	
 	^self * (Entero with: -1)! !
 
-!Numero methodsFor: 'arithmetic operations' stamp: 'PML 9/27/2018 20:44:02'!
-sumarseConEntero: anAdderEntero 
-	
-	self subclassResponsibility ! !
-
 
 !Numero methodsFor: 'testing' stamp: 'HGZ 9/26/2018 16:05:52'!
 isInteger
@@ -373,12 +368,62 @@ Numero subclass: #Entero
 	poolDictionaries: ''
 	category: 'Numero-Exercise'!
 
-!Entero methodsFor: 'arithmetic operations' stamp: 'HGZ 9/26/2018 16:57:53'!
+!Entero methodsFor: 'private' stamp: 'PML 9/29/2018 22:59:04'!
+dividiteConEntero: aDivident
+	
+	^ Fraccion with: aDivident over: self! !
+
+!Entero methodsFor: 'private' stamp: 'PML 9/29/2018 23:19:09'!
+dividiteConFraccion: aDivident
+
+	| newNumerator newDenominator |
+	
+	newNumerator := aDivident numerator.
+	newDenominator := aDivident denominator * self.
+
+	^newNumerator / newDenominator ! !
+
+!Entero methodsFor: 'private' stamp: 'PML 9/29/2018 19:51:29'!
+multiplicarseConEntero: aMultiplier 
+	
+	^ self class with: value * aMultiplier integerValue! !
+
+!Entero methodsFor: 'private' stamp: 'PML 9/29/2018 22:45:16'!
+multiplicarseConFraccion: aMultiplier
+
+	^ aMultiplier multiplicarseConEntero: self! !
+
+!Entero methodsFor: 'private' stamp: 'PML 9/29/2018 19:36:03'!
+restarseConEntero: aSubtrahend 
+	
+	^ self class with: aSubtrahend integerValue - self integerValue. 
+! !
+
+!Entero methodsFor: 'private' stamp: 'PML 9/27/2018 21:53:40'!
+restarseConFraccion: aSubtrahend 
+	
+	| newNumerator newDenominator |
+	
+	newNumerator := aSubtrahend numerator - (aSubtrahend denominator * self ).
+	newDenominator := aSubtrahend denominator.
+
+	^newNumerator / newDenominator ! !
+
+!Entero methodsFor: 'private' stamp: 'PML 9/29/2018 19:41:12'!
+sumarseConEntero: anAdder
+
+	^self class with: self integerValue + anAdder integerValue! !
+
+!Entero methodsFor: 'private' stamp: 'PML 9/29/2018 23:28:18'!
+sumarseConFraccion: anAdder
+
+	^ anAdder sumarseConEntero: self! !
+
+
+!Entero methodsFor: 'arithmetic operations' stamp: 'PML 9/29/2018 22:41:08'!
 * aMultiplier 
-	
-	aMultiplier isInteger ifTrue: [^self class with: value * aMultiplier integerValue].
-	
-	^aMultiplier * self! !
+
+	^ aMultiplier multiplicarseConEntero: self.! !
 
 !Entero methodsFor: 'arithmetic operations' stamp: 'PML 9/27/2018 21:35:09'!
 + anAdder 
@@ -390,12 +435,10 @@ Numero subclass: #Entero
 	
 	^ aSubtrahend restarseConEntero: self! !
 
-!Entero methodsFor: 'arithmetic operations' stamp: 'HGZ 9/26/2018 17:10:48'!
+!Entero methodsFor: 'arithmetic operations' stamp: 'PML 9/29/2018 23:01:54'!
 / aDivisor 
 	
-	aDivisor isInteger ifTrue: [^Fraccion with: self over: aDivisor].
-	
-	^self * aDivisor inverse! !
+	^ aDivisor dividiteConEntero: self! !
 
 !Entero methodsFor: 'arithmetic operations' stamp: 'HernanWilkinson 5/7/2016 21:55'!
 // aDivisor 
@@ -420,26 +463,6 @@ fibonacci
 greatestCommonDivisorWith: anEntero 
 	
 	^self class with: (value gcd: anEntero integerValue)! !
-
-!Entero methodsFor: 'arithmetic operations' stamp: 'PML 9/28/2018 01:29:58'!
-restarseConEntero: aSubtrahend 
-	
-	^ aSubtrahend integerValue - (self integerValue)! !
-
-!Entero methodsFor: 'arithmetic operations' stamp: 'PML 9/27/2018 21:53:40'!
-restarseConFraccion: aSubtrahend 
-	
-	| newNumerator newDenominator |
-	
-	newNumerator := aSubtrahend numerator - (aSubtrahend denominator * self ).
-	newDenominator := aSubtrahend denominator.
-
-	^newNumerator / newDenominator ! !
-
-!Entero methodsFor: 'arithmetic operations' stamp: 'PML 9/27/2018 20:44:37'!
-sumarseConEntero: anAdderEntero
-
-	^self class with: self integerValue + anAdderEntero integerValue! !
 
 
 !Entero methodsFor: 'comparing' stamp: 'HernanWilkinson 5/7/2016 21:01'!
@@ -519,41 +542,15 @@ Numero subclass: #Fraccion
 	poolDictionaries: ''
 	category: 'Numero-Exercise'!
 
-!Fraccion methodsFor: 'arithmetic operations' stamp: 'HGZ 9/26/2018 16:34:58'!
+!Fraccion methodsFor: 'arithmetic operations' stamp: 'PML 9/29/2018 22:46:46'!
 * aMultiplier 
 	
-	 |newNumerator newDenominator |
-	
-	aMultiplier isInteger ifTrue: [
+	^ aMultiplier multiplicarseConFraccion: self! !
 
-		newNumerator := numerator * aMultiplier.
-		newDenominator := denominator.
-
-	] ifFalse: [
-
-		newNumerator := numerator * aMultiplier numerator.
-		newDenominator := denominator * aMultiplier denominator.
-
-	].	
-	^newNumerator / newDenominator! !
-
-!Fraccion methodsFor: 'arithmetic operations' stamp: 'HGZ 9/26/2018 16:27:16'!
+!Fraccion methodsFor: 'arithmetic operations' stamp: 'PML 9/29/2018 22:55:10'!
 + anAdder 
 	
-	| newNumerator newDenominator |
-	
-	anAdder isInteger ifTrue: [
-
-		newNumerator := numerator + (denominator * anAdder).
-		newDenominator := denominator.
-
-	] ifFalse: [
-
-		newNumerator := (numerator * anAdder denominator) + (denominator * anAdder numerator).
-		newDenominator := denominator * anAdder denominator.
-
-	].	
-	^newNumerator / newDenominator ! !
+	^ anAdder sumarseConFraccion: self! !
 
 !Fraccion methodsFor: 'arithmetic operations' stamp: 'PML 9/27/2018 21:55:43'!
 - aSubtrahend 
@@ -561,67 +558,15 @@ Numero subclass: #Fraccion
 	^ aSubtrahend restarseConFraccion: self
 ! !
 
-!Fraccion methodsFor: 'arithmetic operations' stamp: 'HGZ 9/26/2018 16:46:18'!
+!Fraccion methodsFor: 'arithmetic operations' stamp: 'PML 9/29/2018 23:23:43'!
 / aDivisor 
 	
-	| newNumerator newDenominator |
-	
-	aDivisor isInteger ifTrue: [
+	^ aDivisor dividiteConFraccion: self! !
 
-		newNumerator := numerator.
-		newDenominator := denominator * aDivisor .
-
-	] ifFalse: [
-
-		newNumerator := (numerator * aDivisor denominator).
-		newDenominator := (denominator * aDivisor numerator).
-
-	].	
-	^newNumerator / newDenominator ! !
-
-!Fraccion methodsFor: 'arithmetic operations' stamp: 'HGZ 9/26/2018 17:12:38'!
+!Fraccion methodsFor: 'arithmetic operations' stamp: 'PML 9/29/2018 23:24:06'!
 inverse
-	^(denominator / numerator)! !
-
-!Fraccion methodsFor: 'arithmetic operations' stamp: 'PML 9/27/2018 21:54:34'!
-restarseConEntero: aSubtrahend 
-
-	| newNumerator newDenominator |
 	
-	newNumerator := (denominator * aSubtrahend ) - numerator.
-	newDenominator := denominator.
-
-	^newNumerator / newDenominator 
-! !
-
-!Fraccion methodsFor: 'arithmetic operations' stamp: 'PML 9/27/2018 21:54:18'!
-restarseConFraccion: aSubtrahend 
-
-	| newNumerator newDenominator |
-	
-	newNumerator := (denominator * aSubtrahend numerator) - (numerator * aSubtrahend denominator).
-	newDenominator := denominator * aSubtrahend denominator.
-
-	^newNumerator / newDenominator 
-! !
-
-!Fraccion methodsFor: 'arithmetic operations' stamp: 'PML 9/27/2018 20:47:51'!
-sumarseConEntero: anAdderEntero 
-	
-	| newDenominator newNumerator |
-	newNumerator := numerator + (denominator * anAdderEntero).
-	newDenominator := denominator.
-	
-	^newNumerator / newDenominator! !
-
-!Fraccion methodsFor: 'arithmetic operations' stamp: 'PML 9/27/2018 21:45:08'!
-sumarseConFraccion: anAdderFraction 
-	
-	| newNumerator newDenominator |
-		newNumerator := (numerator * anAdderFraction denominator) + (denominator * anAdderFraction numerator).
-		newDenominator := denominator * anAdderFraction denominator.
-
-	^newNumerator / newDenominator ! !
+	^ denominator / numerator! !
 
 
 !Fraccion methodsFor: 'comparing' stamp: 'HernanWilkinson 5/7/2016 20:42'!
@@ -685,6 +630,85 @@ printOn: aStream
 		print: numerator;
 		nextPut: $/;
 		print: denominator ! !
+
+
+!Fraccion methodsFor: 'private' stamp: 'PML 9/29/2018 23:01:36'!
+dividiteConEntero: aDivident
+
+	^ aDivident * self inverse! !
+
+!Fraccion methodsFor: 'private' stamp: 'PML 9/29/2018 23:23:22'!
+dividiteConFraccion: aDivident
+
+	| newNumerator newDenominator |
+	
+	newNumerator := aDivident numerator * self denominator.
+	newDenominator := aDivident denominator * self numerator.
+
+	^newNumerator / newDenominator ! !
+
+!Fraccion methodsFor: 'private' stamp: 'PML 9/29/2018 23:25:17'!
+multiplicarseConEntero: aMultiplier 
+	
+	| newDenominator newNumerator |
+	
+	newNumerator := numerator * aMultiplier.
+	newDenominator := denominator.
+	
+	^newNumerator / newDenominator! !
+
+!Fraccion methodsFor: 'private' stamp: 'PML 9/29/2018 23:28:53'!
+multiplicarseConFraccion: aMultiplier
+
+	| newNumerator newDenominator |
+	
+	newNumerator := numerator * aMultiplier numerator.
+	newDenominator := denominator * aMultiplier denominator.
+
+	^ newNumerator / newDenominator
+! !
+
+!Fraccion methodsFor: 'private' stamp: 'PML 9/27/2018 21:54:34'!
+restarseConEntero: aSubtrahend 
+
+	| newNumerator newDenominator |
+	
+	newNumerator := (denominator * aSubtrahend ) - numerator.
+	newDenominator := denominator.
+
+	^newNumerator / newDenominator 
+! !
+
+!Fraccion methodsFor: 'private' stamp: 'PML 9/27/2018 21:54:18'!
+restarseConFraccion: aSubtrahend 
+
+	| newNumerator newDenominator |
+	
+	newNumerator := (denominator * aSubtrahend numerator) - (numerator * aSubtrahend denominator).
+	newDenominator := denominator * aSubtrahend denominator.
+
+	^newNumerator / newDenominator 
+! !
+
+!Fraccion methodsFor: 'private' stamp: 'PML 9/29/2018 23:25:31'!
+sumarseConEntero: anAdder 
+	
+	| newDenominator newNumerator |
+	
+	newNumerator := numerator + (denominator * anAdder).
+	newDenominator := denominator.
+	
+	^newNumerator / newDenominator! !
+
+!Fraccion methodsFor: 'private' stamp: 'PML 9/29/2018 22:43:58'!
+sumarseConFraccion: anAdderFraction 
+	
+	| newNumerator newDenominator |
+	
+	newNumerator := (numerator * anAdderFraction denominator) + (denominator * anAdderFraction numerator).
+	newDenominator := denominator * anAdderFraction denominator.
+
+	^newNumerator / newDenominator ! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
