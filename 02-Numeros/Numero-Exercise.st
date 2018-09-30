@@ -642,10 +642,15 @@ printOn: aStream
 		print: denominator ! !
 
 
-!Fraccion methodsFor: 'private' stamp: 'HGZ 9/30/2018 11:45:16'!
+!Fraccion methodsFor: 'private' stamp: 'HGZ 9/30/2018 12:30:29'!
 dividirAEntero: aDividentEntero
 
-	^ aDividentEntero * self inverse! !
+	| newNumerator newDenominator |
+	
+	newNumerator := denominator  * aDividentEntero .
+	newDenominator := numerator .
+
+	^newNumerator / newDenominator ! !
 
 !Fraccion methodsFor: 'private' stamp: 'HGZ 9/30/2018 11:44:58'!
 dividirAFraccion: aDividentFraccion
