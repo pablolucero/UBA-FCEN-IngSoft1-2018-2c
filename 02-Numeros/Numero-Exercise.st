@@ -368,56 +368,66 @@ Numero subclass: #Entero
 	poolDictionaries: ''
 	category: 'Numero-Exercise'!
 
-!Entero methodsFor: 'private' stamp: 'PML 9/29/2018 22:59:04'!
-dividiteConEntero: aDivident
+!Entero methodsFor: 'private' stamp: 'HGZ 9/30/2018 11:43:15'!
+dividirAEntero: aDividentEntero
 	
-	^ Fraccion with: aDivident over: self! !
+	^ Fraccion with: aDividentEntero over: self! !
 
-!Entero methodsFor: 'private' stamp: 'PML 9/29/2018 23:19:09'!
-dividiteConFraccion: aDivident
+!Entero methodsFor: 'private' stamp: 'HGZ 9/30/2018 11:43:07'!
+dividirAFraccion: aDividentFraccion
 
 	| newNumerator newDenominator |
 	
-	newNumerator := aDivident numerator.
-	newDenominator := aDivident denominator * self.
+	newNumerator := aDividentFraccion numerator.
+	newDenominator := aDividentFraccion denominator * self.
 
 	^newNumerator / newDenominator ! !
 
-!Entero methodsFor: 'private' stamp: 'PML 9/29/2018 19:51:29'!
-multiplicarseConEntero: aMultiplier 
+!Entero methodsFor: 'private' stamp: 'HGZ 9/30/2018 11:42:58'!
+multiplicarseConEntero: aMultiplierEntero
 	
-	^ self class with: value * aMultiplier integerValue! !
+	^ self class with: value * aMultiplierEntero integerValue! !
 
-!Entero methodsFor: 'private' stamp: 'PML 9/29/2018 22:45:16'!
-multiplicarseConFraccion: aMultiplier
+!Entero methodsFor: 'private' stamp: 'HGZ 9/30/2018 11:42:50'!
+multiplicarseConFraccion: aMultiplierFraccion
 
-	^ aMultiplier multiplicarseConEntero: self! !
-
-!Entero methodsFor: 'private' stamp: 'PML 9/29/2018 19:36:03'!
-restarseConEntero: aSubtrahend 
+	| newDenominator newNumerator |
 	
-	^ self class with: aSubtrahend integerValue - self integerValue. 
+	newNumerator := aMultiplierFraccion numerator * self.
+	newDenominator := aMultiplierFraccion denominator.
+	
+	^newNumerator / newDenominator! !
+
+!Entero methodsFor: 'private' stamp: 'HGZ 9/30/2018 11:42:31'!
+restarAEntero: aSubtrahendEntero
+	
+	^ self class with: aSubtrahendEntero integerValue - self integerValue. 
 ! !
 
-!Entero methodsFor: 'private' stamp: 'PML 9/27/2018 21:53:40'!
-restarseConFraccion: aSubtrahend 
+!Entero methodsFor: 'private' stamp: 'HGZ 9/30/2018 11:42:23'!
+restarAFraccion: aSubtrahendFraccion
 	
 	| newNumerator newDenominator |
 	
-	newNumerator := aSubtrahend numerator - (aSubtrahend denominator * self ).
-	newDenominator := aSubtrahend denominator.
+	newNumerator := aSubtrahendFraccion numerator - (aSubtrahendFraccion denominator * self ).
+	newDenominator := aSubtrahendFraccion denominator.
 
 	^newNumerator / newDenominator ! !
 
-!Entero methodsFor: 'private' stamp: 'PML 9/29/2018 19:41:12'!
-sumarseConEntero: anAdder
+!Entero methodsFor: 'private' stamp: 'HGZ 9/30/2018 11:41:41'!
+sumarseConEntero: anAdderEntero
 
-	^self class with: self integerValue + anAdder integerValue! !
+	^self class with: self integerValue + anAdderEntero integerValue! !
 
-!Entero methodsFor: 'private' stamp: 'PML 9/29/2018 23:28:18'!
-sumarseConFraccion: anAdder
+!Entero methodsFor: 'private' stamp: 'HGZ 9/30/2018 11:42:03'!
+sumarseConFraccion: anAdderFraccion
 
-	^ anAdder sumarseConEntero: self! !
+	| newDenominator newNumerator |
+	
+	newNumerator := anAdderFraccion numerator + (anAdderFraccion denominator * self).
+	newDenominator := anAdderFraccion denominator.
+	
+	^newNumerator / newDenominator! !
 
 
 !Entero methodsFor: 'arithmetic operations' stamp: 'PML 9/29/2018 22:41:08'!
@@ -430,15 +440,15 @@ sumarseConFraccion: anAdder
 
 	^ anAdder sumarseConEntero: self! !
 
-!Entero methodsFor: 'arithmetic operations' stamp: 'PML 9/27/2018 21:55:52'!
+!Entero methodsFor: 'arithmetic operations' stamp: 'HGZ 9/30/2018 11:07:36'!
 - aSubtrahend 
 	
-	^ aSubtrahend restarseConEntero: self! !
+	^ aSubtrahend restarAEntero: self! !
 
-!Entero methodsFor: 'arithmetic operations' stamp: 'PML 9/29/2018 23:01:54'!
+!Entero methodsFor: 'arithmetic operations' stamp: 'HGZ 9/30/2018 11:06:35'!
 / aDivisor 
 	
-	^ aDivisor dividiteConEntero: self! !
+	^ aDivisor dividirAEntero: self! !
 
 !Entero methodsFor: 'arithmetic operations' stamp: 'HernanWilkinson 5/7/2016 21:55'!
 // aDivisor 
@@ -552,16 +562,16 @@ Numero subclass: #Fraccion
 	
 	^ anAdder sumarseConFraccion: self! !
 
-!Fraccion methodsFor: 'arithmetic operations' stamp: 'PML 9/27/2018 21:55:43'!
+!Fraccion methodsFor: 'arithmetic operations' stamp: 'HGZ 9/30/2018 11:07:53'!
 - aSubtrahend 
 
-	^ aSubtrahend restarseConFraccion: self
+	^ aSubtrahend restarAFraccion: self
 ! !
 
-!Fraccion methodsFor: 'arithmetic operations' stamp: 'PML 9/29/2018 23:23:43'!
+!Fraccion methodsFor: 'arithmetic operations' stamp: 'HGZ 9/30/2018 11:07:03'!
 / aDivisor 
 	
-	^ aDivisor dividiteConFraccion: self! !
+	^ aDivisor dividirAFraccion: self! !
 
 !Fraccion methodsFor: 'arithmetic operations' stamp: 'PML 9/29/2018 23:24:06'!
 inverse
@@ -632,81 +642,81 @@ printOn: aStream
 		print: denominator ! !
 
 
-!Fraccion methodsFor: 'private' stamp: 'PML 9/29/2018 23:01:36'!
-dividiteConEntero: aDivident
+!Fraccion methodsFor: 'private' stamp: 'HGZ 9/30/2018 11:45:16'!
+dividirAEntero: aDividentEntero
 
-	^ aDivident * self inverse! !
+	^ aDividentEntero * self inverse! !
 
-!Fraccion methodsFor: 'private' stamp: 'PML 9/29/2018 23:23:22'!
-dividiteConFraccion: aDivident
+!Fraccion methodsFor: 'private' stamp: 'HGZ 9/30/2018 11:44:58'!
+dividirAFraccion: aDividentFraccion
 
 	| newNumerator newDenominator |
 	
-	newNumerator := aDivident numerator * self denominator.
-	newDenominator := aDivident denominator * self numerator.
+	newNumerator := aDividentFraccion numerator * self denominator.
+	newDenominator := aDividentFraccion denominator * self numerator.
 
 	^newNumerator / newDenominator ! !
 
-!Fraccion methodsFor: 'private' stamp: 'PML 9/29/2018 23:25:17'!
-multiplicarseConEntero: aMultiplier 
+!Fraccion methodsFor: 'private' stamp: 'HGZ 9/30/2018 11:44:48'!
+multiplicarseConEntero: aMultiplierEntero
 	
 	| newDenominator newNumerator |
 	
-	newNumerator := numerator * aMultiplier.
+	newNumerator := numerator * aMultiplierEntero .
 	newDenominator := denominator.
 	
 	^newNumerator / newDenominator! !
 
-!Fraccion methodsFor: 'private' stamp: 'PML 9/29/2018 23:28:53'!
-multiplicarseConFraccion: aMultiplier
+!Fraccion methodsFor: 'private' stamp: 'HGZ 9/30/2018 11:44:39'!
+multiplicarseConFraccion: aMultiplierFraccion
 
 	| newNumerator newDenominator |
 	
-	newNumerator := numerator * aMultiplier numerator.
-	newDenominator := denominator * aMultiplier denominator.
+	newNumerator := numerator * aMultiplierFraccion numerator.
+	newDenominator := denominator * aMultiplierFraccion denominator.
 
 	^ newNumerator / newDenominator
 ! !
 
-!Fraccion methodsFor: 'private' stamp: 'PML 9/27/2018 21:54:34'!
-restarseConEntero: aSubtrahend 
+!Fraccion methodsFor: 'private' stamp: 'HGZ 9/30/2018 11:44:23'!
+restarAEntero: aSubtrahendEntero
 
 	| newNumerator newDenominator |
 	
-	newNumerator := (denominator * aSubtrahend ) - numerator.
+	newNumerator := (denominator * aSubtrahendEntero ) - numerator.
 	newDenominator := denominator.
 
 	^newNumerator / newDenominator 
 ! !
 
-!Fraccion methodsFor: 'private' stamp: 'PML 9/27/2018 21:54:18'!
-restarseConFraccion: aSubtrahend 
+!Fraccion methodsFor: 'private' stamp: 'HGZ 9/30/2018 11:44:15'!
+restarAFraccion: aSubtrahendFraccion
 
 	| newNumerator newDenominator |
 	
-	newNumerator := (denominator * aSubtrahend numerator) - (numerator * aSubtrahend denominator).
-	newDenominator := denominator * aSubtrahend denominator.
+	newNumerator := (denominator * aSubtrahendFraccion numerator) - (numerator * aSubtrahendFraccion denominator).
+	newDenominator := denominator * aSubtrahendFraccion denominator.
 
 	^newNumerator / newDenominator 
 ! !
 
-!Fraccion methodsFor: 'private' stamp: 'PML 9/29/2018 23:25:31'!
-sumarseConEntero: anAdder 
+!Fraccion methodsFor: 'private' stamp: 'HGZ 9/30/2018 11:43:58'!
+sumarseConEntero: anAdderEntero
 	
 	| newDenominator newNumerator |
 	
-	newNumerator := numerator + (denominator * anAdder).
+	newNumerator := numerator + (denominator * anAdderEntero ).
 	newDenominator := denominator.
 	
 	^newNumerator / newDenominator! !
 
-!Fraccion methodsFor: 'private' stamp: 'PML 9/29/2018 22:43:58'!
-sumarseConFraccion: anAdderFraction 
+!Fraccion methodsFor: 'private' stamp: 'HGZ 9/30/2018 11:43:40'!
+sumarseConFraccion: anAdderFraccion 
 	
 	| newNumerator newDenominator |
 	
-	newNumerator := (numerator * anAdderFraction denominator) + (denominator * anAdderFraction numerator).
-	newDenominator := denominator * anAdderFraction denominator.
+	newNumerator := (numerator * anAdderFraccion denominator) + (denominator * anAdderFraccion numerator).
+	newDenominator := denominator * anAdderFraccion denominator.
 
 	^newNumerator / newDenominator ! !
 
