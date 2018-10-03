@@ -130,16 +130,17 @@ test10CanNotNextWhenThereAreNoObjectsInTheQueue
 
 !classDefinition: #Queue category: #'Queue-Exercise'!
 Object subclass: #Queue
-	instanceVariableNames: 'contents'
+	instanceVariableNames: 'contents state'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'Queue-Exercise'!
 
-!Queue methodsFor: 'initialization' stamp: 'PML 9/29/2018 00:40:35'!
+!Queue methodsFor: 'initialization' stamp: 'PML 9/29/2018 16:40:41'!
 initialize
 
 	super initialize.
-	contents := OrderedCollection new.! !
+	contents := OrderedCollection new.
+	state := Empty new.! !
 
 
 !Queue methodsFor: 'testing' stamp: 'PML 9/29/2018 00:45:48'!
@@ -153,23 +154,30 @@ size
 	^ contents size! !
 
 
-!Queue methodsFor: 'operations' stamp: 'PML 9/29/2018 02:29:12'!
+!Queue methodsFor: 'operations' stamp: 'HGZ 10/3/2018 19:54:41'!
 dequeue
+	| ultimoElemento |
 	
-	contents isEmpty ifTrue: [ self error: Queue queueEmptyErrorDescription ].
-	^ contents removeFirst! !
+	state chequeoHayElementos.
+	
+	ultimoElemento := contents removeFirst.
+	
+	state := (State subclasses detect: [:unEstado | unEstado esElEstadoAdecuadoPara: contents]) new.
 
-!Queue methodsFor: 'operations' stamp: 'PML 9/29/2018 01:01:49'!
+	^ ultimoElemento! !
+
+!Queue methodsFor: 'operations' stamp: 'PML 9/29/2018 16:46:01'!
 enqueue: anElement 
 	
+	state := NotEmpty new.
 	^ contents add: anElement.
 ! !
 
-!Queue methodsFor: 'operations' stamp: 'PML 9/29/2018 02:27:09'!
+!Queue methodsFor: 'operations' stamp: 'HGZ 10/3/2018 19:54:53'!
 next
 
-	contents isEmpty ifTrue: [ self error: Queue queueEmptyErrorDescription ].
-	^ contents at: (contents size) ! !
+	state chequeoHayElementos.
+	^ contents at: 1! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
@@ -180,3 +188,87 @@ Queue class
 !Queue class methodsFor: 'error descriptions'!
 queueEmptyErrorDescription
 	^ 'Queue is empty'.! !
+
+
+!classDefinition: #State category: #'Queue-Exercise'!
+Object subclass: #State
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Queue-Exercise'!
+
+!State methodsFor: 'testing' stamp: 'HGZ 10/3/2018 19:55:07'!
+chequeoHayElementos
+
+	self subclassResponsibility ! !
+
+!State methodsFor: 'testing' stamp: 'PML 9/29/2018 16:50:06'!
+isEmpty
+
+	self subclassResponsibility ! !
+
+"-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
+
+!classDefinition: 'State class' category: #'Queue-Exercise'!
+State class
+	instanceVariableNames: ''!
+
+!State class methodsFor: 'testing' stamp: 'HGZ 10/3/2018 19:49:01'!
+esElEstadoAdecuadoPara: unaColeccion
+	self subclassResponsibility ! !
+
+
+!classDefinition: #Empty category: #'Queue-Exercise'!
+State subclass: #Empty
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Queue-Exercise'!
+
+!Empty methodsFor: 'testing' stamp: 'HGZ 10/3/2018 19:59:01'!
+chequeoHayElementos
+	self error: Queue queueEmptyErrorDescription
+! !
+
+!Empty methodsFor: 'testing' stamp: 'PML 9/29/2018 16:51:24'!
+isEmpty
+
+	^ true! !
+
+"-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
+
+!classDefinition: 'Empty class' category: #'Queue-Exercise'!
+Empty class
+	instanceVariableNames: ''!
+
+!Empty class methodsFor: 'testing' stamp: 'HGZ 10/3/2018 19:43:15'!
+esElEstadoAdecuadoPara: unaColeccion
+
+	^ unaColeccion isEmpty! !
+
+
+!classDefinition: #NotEmpty category: #'Queue-Exercise'!
+State subclass: #NotEmpty
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Queue-Exercise'!
+
+!NotEmpty methodsFor: 'testing' stamp: 'HGZ 10/3/2018 19:56:20'!
+chequeoHayElementos! !
+
+!NotEmpty methodsFor: 'testing' stamp: 'PML 9/29/2018 16:51:39'!
+isEmpty
+
+	^ false! !
+
+"-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
+
+!classDefinition: 'NotEmpty class' category: #'Queue-Exercise'!
+NotEmpty class
+	instanceVariableNames: ''!
+
+!NotEmpty class methodsFor: 'testing' stamp: 'HGZ 10/3/2018 19:43:55'!
+esElEstadoAdecuadoPara: unaColeccion
+
+	^ unaColeccion isEmpty not! !
