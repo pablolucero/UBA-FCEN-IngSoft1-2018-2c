@@ -154,29 +154,32 @@ size
 	^ contents size! !
 
 
-!Queue methodsFor: 'operations' stamp: 'HGZ 10/3/2018 19:54:41'!
+!Queue methodsFor: 'operations' stamp: 'PML 10/4/2018 09:41:51'!
 dequeue
-	| ultimoElemento |
+
+	| primerElemento |
 	
 	state chequeoHayElementos.
 	
-	ultimoElemento := contents removeFirst.
+	primerElemento := contents removeFirst.
 	
 	state := (State subclasses detect: [:unEstado | unEstado esElEstadoAdecuadoPara: contents]) new.
 
-	^ ultimoElemento! !
+	^ primerElemento! !
 
-!Queue methodsFor: 'operations' stamp: 'PML 9/29/2018 16:46:01'!
+!Queue methodsFor: 'operations' stamp: 'PML 10/4/2018 09:42:22'!
 enqueue: anElement 
 	
 	state := NotEmpty new.
+	
 	^ contents add: anElement.
 ! !
 
-!Queue methodsFor: 'operations' stamp: 'HGZ 10/3/2018 19:54:53'!
+!Queue methodsFor: 'operations' stamp: 'PML 10/4/2018 09:42:08'!
 next
 
 	state chequeoHayElementos.
+	
 	^ contents at: 1! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
@@ -225,8 +228,9 @@ State subclass: #Empty
 	poolDictionaries: ''
 	category: 'Queue-Exercise'!
 
-!Empty methodsFor: 'testing' stamp: 'HGZ 10/3/2018 19:59:01'!
+!Empty methodsFor: 'testing' stamp: 'PML 10/4/2018 09:42:57'!
 chequeoHayElementos
+	
 	self error: Queue queueEmptyErrorDescription
 ! !
 
