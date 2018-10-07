@@ -5,16 +5,16 @@ TestCase subclass: #TelefonicaSimpleTest
 	poolDictionaries: ''
 	category: 'Telefonica-simple'!
 
-!TelefonicaSimpleTest methodsFor: 'as yet unclassified' stamp: 'PML 10/7/2018 00:48:52'!
+!TelefonicaSimpleTest methodsFor: 'testing' stamp: 'PML 10/7/2018 01:50:49'!
 test01CalcularValorLlamadaLocal
 
 	| facturador llamada |
-	llamada := LlamadaSimple deTipo: 'local' conDuracion: (10 * second) .
+	llamada := LlamadaSimple deTipo: 'local' conDuracion: (10 * second).
 
 	facturador := FacturadorSimple new.
 	self assert: (facturador calcularCostoLLamada: llamada) equals: (1.0 * peso).! !
 
-!TelefonicaSimpleTest methodsFor: 'as yet unclassified' stamp: 'PML 10/7/2018 00:48:47'!
+!TelefonicaSimpleTest methodsFor: 'testing' stamp: 'PML 10/7/2018 00:48:47'!
 test02CalcularValorLlamadaNacional
 
 	| facturador llamada |
@@ -23,7 +23,7 @@ test02CalcularValorLlamadaNacional
 	facturador := FacturadorSimple new.
 	self assert: (facturador calcularCostoLLamada: llamada) equals: (2.5 * peso).! !
 
-!TelefonicaSimpleTest methodsFor: 'as yet unclassified' stamp: 'PML 10/7/2018 00:48:33'!
+!TelefonicaSimpleTest methodsFor: 'testing' stamp: 'PML 10/7/2018 00:48:33'!
 test03CalcularValorLlamadaInternacional
 
 	| facturador llamada |
@@ -32,7 +32,7 @@ test03CalcularValorLlamadaInternacional
 	facturador := FacturadorSimple new.
 	self assert: (facturador calcularCostoLLamada: llamada) equals: (10 * peso).! !
 
-!TelefonicaSimpleTest methodsFor: 'as yet unclassified' stamp: 'PML 10/7/2018 00:48:41'!
+!TelefonicaSimpleTest methodsFor: 'testing' stamp: 'PML 10/7/2018 00:48:41'!
 test04CalcularValorLlamadaInvalida
 
 	| facturador llamada |
@@ -53,7 +53,7 @@ Object subclass: #CalculadorDeLlamada
 	poolDictionaries: ''
 	category: 'Telefonica-simple'!
 
-!CalculadorDeLlamada methodsFor: 'as yet unclassified' stamp: 'PML 10/7/2018 00:19:43'!
+!CalculadorDeLlamada methodsFor: 'operations' stamp: 'PML 10/7/2018 00:19:43'!
 calcular: unaLlamada
 	self subclassResponsibility ! !
 
@@ -85,7 +85,7 @@ CalculadorDeLlamada subclass: #CalculadorDeLlamadaInternacional
 	poolDictionaries: ''
 	category: 'Telefonica-simple'!
 
-!CalculadorDeLlamadaInternacional methodsFor: 'as yet unclassified' stamp: 'PML 10/7/2018 00:19:25'!
+!CalculadorDeLlamadaInternacional methodsFor: 'operations' stamp: 'PML 10/7/2018 00:19:25'!
 calcular: unaLlamada
 	^ (unaLlamada duracion convertTo: second) amount * (1 * peso)! !
 
@@ -107,7 +107,7 @@ CalculadorDeLlamada subclass: #CalculadorDeLlamadaLocal
 	poolDictionaries: ''
 	category: 'Telefonica-simple'!
 
-!CalculadorDeLlamadaLocal methodsFor: 'as yet unclassified' stamp: 'PML 10/7/2018 00:20:07'!
+!CalculadorDeLlamadaLocal methodsFor: 'operations' stamp: 'PML 10/7/2018 00:20:07'!
 calcular: unaLlamada
 	^ (unaLlamada duracion convertTo: second) amount * (0.10 * peso)! !
 
@@ -129,7 +129,7 @@ CalculadorDeLlamada subclass: #CalculadorDeLlamadaNacional
 	poolDictionaries: ''
 	category: 'Telefonica-simple'!
 
-!CalculadorDeLlamadaNacional methodsFor: 'as yet unclassified' stamp: 'PML 10/7/2018 00:19:55'!
+!CalculadorDeLlamadaNacional methodsFor: 'operations' stamp: 'PML 10/7/2018 00:19:55'!
 calcular: unaLlamada
 	^ (unaLlamada duracion convertTo: second) amount * (0.25 * peso)! !
 
@@ -151,7 +151,7 @@ Object subclass: #FacturadorSimple
 	poolDictionaries: ''
 	category: 'Telefonica-simple'!
 
-!FacturadorSimple methodsFor: 'as yet unclassified' stamp: 'PML 10/7/2018 00:30:48'!
+!FacturadorSimple methodsFor: 'operations' stamp: 'PML 10/7/2018 00:30:48'!
 calcularCostoLLamada: unaLlamada
 
 	| calculador |
@@ -167,37 +167,35 @@ Object subclass: #LlamadaSimple
 	poolDictionaries: ''
 	category: 'Telefonica-simple'!
 
-!LlamadaSimple methodsFor: 'as yet unclassified' stamp: 'PML 10/6/2018 22:38:00'!
+!LlamadaSimple methodsFor: 'accessing' stamp: 'PML 10/6/2018 22:38:00'!
 duracion
 	^ duracion! !
 
-!LlamadaSimple methodsFor: 'as yet unclassified' stamp: 'PML 10/6/2018 22:38:16'!
-duracion: unaDuracion
-	duracion := unaDuracion! !
+!LlamadaSimple methodsFor: 'accessing' stamp: 'PML 10/6/2018 20:48:24'!
+tipo
+	^tipo ! !
 
-!LlamadaSimple methodsFor: 'as yet unclassified' stamp: 'PML 10/6/2018 22:31:41'!
+
+!LlamadaSimple methodsFor: 'testing' stamp: 'PML 10/6/2018 22:31:41'!
 esInternacional
 
 	^tipo = 'internacional'! !
 
-!LlamadaSimple methodsFor: 'as yet unclassified' stamp: 'PML 10/6/2018 22:31:54'!
+!LlamadaSimple methodsFor: 'testing' stamp: 'PML 10/6/2018 22:31:54'!
 esLocal
 
 	^tipo = 'local'! !
 
-!LlamadaSimple methodsFor: 'as yet unclassified' stamp: 'PML 10/6/2018 22:31:29'!
+!LlamadaSimple methodsFor: 'testing' stamp: 'PML 10/6/2018 22:31:29'!
 esNacional
 
 	^tipo = 'nacional'! !
 
-!LlamadaSimple methodsFor: 'as yet unclassified' stamp: 'PML 10/6/2018 20:48:24'!
-tipo
-	^tipo ! !
 
-!LlamadaSimple methodsFor: 'as yet unclassified' stamp: 'PML 10/6/2018 20:49:56'!
-tipo: unTipo
-	
-	^ tipo := unTipo! !
+!LlamadaSimple methodsFor: 'initialization - private' stamp: 'PML 10/7/2018 01:58:58'!
+initializeTipo: unTipo duracion: unaDuracion 
+	tipo _ unTipo.
+	duracion _ unaDuracion ! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
@@ -205,17 +203,8 @@ tipo: unTipo
 LlamadaSimple class
 	instanceVariableNames: ''!
 
-!LlamadaSimple class methodsFor: 'as yet unclassified' stamp: 'PML 10/6/2018 20:52:36'!
-deTipo: unTipo
-	| nuevaLLamada |
-	nuevaLLamada := self new.
-	nuevaLLamada tipo: unTipo.
-	^nuevaLLamada ! !
-
-
-!LlamadaSimple class methodsFor: 'instance creation' stamp: 'PML 10/6/2018 22:38:38'!
-deTipo: unTipo conDuracion: unaDuracion 
-	| llamada |
-	llamada := LlamadaSimple deTipo: unTipo.
-	llamada duracion: unaDuracion.
-	^ llamada ! !
+!LlamadaSimple class methodsFor: 'instance creation' stamp: 'PML 10/7/2018 01:57:33'!
+deTipo: unTipo conDuracion: unaDuracion
+	
+	^self new initializeTipo: unTipo duracion: unaDuracion 
+! !
