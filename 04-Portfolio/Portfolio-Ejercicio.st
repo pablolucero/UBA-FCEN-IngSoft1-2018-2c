@@ -130,10 +130,10 @@ balance
 	^ accounts sum: [ :account | account balance ] ! !
 
 
-!Portfolio methodsFor: 'testing' stamp: 'PML 10/14/2018 02:54:25'!
+!Portfolio methodsFor: 'testing' stamp: 'PML 10/14/2018 14:22:38'!
 doesManage: anAccount
 
-	^accounts anySatisfy: [ :aManagedAccount | aManagedAccount = anAccount or: (anAccount doesManage: aManagedAccount) ]! !
+	^accounts anySatisfy: [ :aManagedAccount | aManagedAccount = anAccount or: (aManagedAccount doesManage: anAccount) ]! !
 
 !Portfolio methodsFor: 'testing' stamp: 'PML 10/14/2018 02:55:38'!
 hasRegistered: aTransaction
