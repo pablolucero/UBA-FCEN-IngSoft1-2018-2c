@@ -178,18 +178,12 @@ transactions
 		] 
 ! !
 
-!Portfolio methodsFor: 'transactions' stamp: 'PML 10/14/2018 18:30:32'!
+!Portfolio methodsFor: 'transactions' stamp: 'PML 10/14/2018 19:15:56'!
 transactionsOf: anAccount 
 
 	(self doesManage: anAccount) ifFalse: [ ^ self error: self class accountNotManagedMessageDescription ]. 
 
-	^ anAccount transactions
-"
-	accounts detect: [:managedAccount | managedAccount doesManage: anAccount ] 
-	ifNone: [^ self error: self class accountNotManagedMessageDescription].
- 
-	^ anAccount transactions	
-"! !
+	^ anAccount transactions! !
 
 
 !Portfolio methodsFor: 'initialization' stamp: 'PML 10/14/2018 18:29:46'!
