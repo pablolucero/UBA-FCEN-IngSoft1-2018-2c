@@ -131,9 +131,10 @@ balance
 
 	self subclassResponsibility ! !
 
-!SummarizingAccount methodsFor: 'balance' stamp: 'HGZ 10/14/2018 16:42:52'!
-canBeManagedBy: aPortfolio
 
+!SummarizingAccount methodsFor: 'accounts' stamp: 'PML 10/14/2018 17:48:28'!
+managedAccounts
+	
 	self subclassResponsibility ! !
 
 
@@ -149,15 +150,10 @@ balance
 
 	^ accounts sum: [ :account | account balance ] ! !
 
-!Portfolio methodsFor: 'balance' stamp: 'HGZ 10/14/2018 16:49:10'!
-canBeManagedBy: aPortfolio
-
-	^ accounts inject: true into: [:conjuntion :anAccount | conjuntion and: (anAccount canBeManagedBy: aPortfolio )]! !
-
-!Portfolio methodsFor: 'balance' stamp: 'HGZ 10/14/2018 16:49:36'!
+!Portfolio methodsFor: 'balance' stamp: 'PML 10/14/2018 18:29:03'!
 canManage: anAccount
 
-	^ accounts inject: true into: [:conjuntion :aManagedAccount | conjuntion and: (aManagedAccount doesManage: anAccount ) not]! !
+	^ ( self managedAccounts includesAnyOf: anAccount managedAccounts ) not ! !
 
 
 !Portfolio methodsFor: 'testing' stamp: 'HGZ 10/14/2018 16:17:34'!
@@ -182,9 +178,9 @@ transactions
 		] 
 ! !
 
-!Portfolio methodsFor: 'transactions' stamp: 'PML 10/14/2018 14:01:19'!
+!Portfolio methodsFor: 'transactions' stamp: 'PML 10/14/2018 18:30:32'!
 transactionsOf: anAccount 
-"
+
 	(self doesManage: anAccount) ifFalse: [ ^ self error: self class accountNotManagedMessageDescription ]. 
 
 	^ anAccount transactions
@@ -193,20 +189,28 @@ transactionsOf: anAccount
 	ifNone: [^ self error: self class accountNotManagedMessageDescription].
  
 	^ anAccount transactions	
-	! !
+"! !
 
 
-!Portfolio methodsFor: 'initialization' stamp: 'HGZ 10/14/2018 16:48:37'!
-initializeWith: anOrderedCollection 
+!Portfolio methodsFor: 'initialization' stamp: 'PML 10/14/2018 18:29:46'!
+initializeWith: aCollectionOfAccounts 
 	
 	accounts _ Set new.
 	
-	anOrderedCollection do: [ :anAccount | 
-		"(anAccount manageConflictWith: accounts)"
-		(anAccount canBeManagedBy: self)
+	aCollectionOfAccounts do: [ :anAccount | 
+		(self canManage: anAccount )
 			ifTrue: [ accounts add: anAccount ]
 			ifFalse: [ self error: self class accountAlreadyManagedErrorMessage ] 
 	]! !
+
+
+!Portfolio methodsFor: 'accounts' stamp: 'PML 10/14/2018 18:40:59'!
+managedAccounts
+
+	^ accounts inject: Set new into: [ :allAccounts :anAccount |
+			allAccounts addAll: anAccount managedAccounts.
+			allAccounts
+		] ! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
@@ -272,11 +276,6 @@ balance
 	^ transactions inject: 0 into: [:total :aTransaction | total + aTransaction netValue ] ! !
 
 
-!ReceptiveAccount methodsFor: 'testing' stamp: 'HGZ 10/14/2018 16:48:06'!
-canBeManagedBy: aPortfolio
-
-	^ aPortfolio canManage: self! !
-
 !ReceptiveAccount methodsFor: 'testing' stamp: 'HGZ 10/14/2018 16:17:49'!
 doesManage: anAccount
 
@@ -287,3 +286,9 @@ hasRegistered: aTtransaction
 
 	^ transactions includes: aTtransaction 
 ! !
+
+
+!ReceptiveAccount methodsFor: 'accounts' stamp: 'PML 10/14/2018 18:08:02'!
+managedAccounts
+	
+	^ Set with: self! !
