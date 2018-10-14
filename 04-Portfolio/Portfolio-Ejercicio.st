@@ -131,6 +131,11 @@ balance
 
 	self subclassResponsibility ! !
 
+!SummarizingAccount methodsFor: 'balance' stamp: 'HGZ 10/14/2018 16:18:05'!
+manageConflictWith: anOrderedCollection
+
+	self subclassResponsibility ! !
+
 
 !classDefinition: #Portfolio category: #'Portfolio-Ejercicio'!
 SummarizingAccount subclass: #Portfolio
@@ -144,11 +149,16 @@ balance
 
 	^ accounts sum: [ :account | account balance ] ! !
 
+!Portfolio methodsFor: 'balance' stamp: 'HGZ 10/14/2018 16:18:17'!
+manageConflictWith: anOrderedCollection
 
-!Portfolio methodsFor: 'testing' stamp: 'PML 10/14/2018 14:22:38'!
+	^ accounts inject: false into: [:conjuntion :anAccount | conjuntion or: (anAccount manageConflictWith: anOrderedCollection )]! !
+
+
+!Portfolio methodsFor: 'testing' stamp: 'HGZ 10/14/2018 16:17:34'!
 doesManage: anAccount
 
-	^accounts anySatisfy: [ :aManagedAccount | aManagedAccount = anAccount or: (aManagedAccount doesManage: anAccount) ]! !
+	^anAccount = self or: (accounts anySatisfy: [ :aManagedAccount | aManagedAccount doesManage: anAccount ])! !
 
 !Portfolio methodsFor: 'testing' stamp: 'PML 10/14/2018 02:55:38'!
 hasRegistered: aTransaction
@@ -181,13 +191,13 @@ transactionsOf: anAccount
 	! !
 
 
-!Portfolio methodsFor: 'initialization' stamp: 'PML 10/14/2018 02:03:30'!
+!Portfolio methodsFor: 'initialization' stamp: 'HGZ 10/14/2018 16:18:37'!
 initializeWith: anOrderedCollection 
 	
 	accounts _ Set new.
 	
 	anOrderedCollection do: [ :anAccount | 
-		(self doesManage: anAccount) 
+		(anAccount manageConflictWith: accounts)
 			ifFalse: [ accounts add: anAccount ]
 			ifTrue: [ self error: self class accountAlreadyManagedErrorMessage ] 
 	]! !
@@ -256,10 +266,9 @@ balance
 	^ transactions inject: 0 into: [:total :aTransaction | total + aTransaction netValue ] ! !
 
 
-!ReceptiveAccount methodsFor: 'testing' stamp: 'PML 10/14/2018 15:29:22'!
+!ReceptiveAccount methodsFor: 'testing' stamp: 'HGZ 10/14/2018 16:17:49'!
 doesManage: anAccount
 
-	(anAccount isKindOf: Portfolio) ifTrue: [ ^anAccount doesManage: self]. 
 	^ self = anAccount ! !
 
 !ReceptiveAccount methodsFor: 'testing' stamp: 'HAW 10/11/2018 16:53:54'!
@@ -267,3 +276,8 @@ hasRegistered: aTtransaction
 
 	^ transactions includes: aTtransaction 
 ! !
+
+!ReceptiveAccount methodsFor: 'testing' stamp: 'HGZ 10/14/2018 16:18:26'!
+manageConflictWith: anOrderedCollection
+
+	^ anOrderedCollection inject: false into: [:conjuntion :anAccount | conjuntion or: (anAccount doesManage: self)]! !
