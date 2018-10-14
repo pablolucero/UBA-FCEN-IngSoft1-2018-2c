@@ -152,13 +152,17 @@ transactions
 		] 
 ! !
 
-!Portfolio methodsFor: 'transactions' stamp: 'PML 10/13/2018 23:16:08'!
+!Portfolio methodsFor: 'transactions' stamp: 'PML 10/14/2018 14:01:19'!
 transactionsOf: anAccount 
-
+"
 	(self doesManage: anAccount) ifFalse: [ ^ self error: self class accountNotManagedMessageDescription ]. 
 
 	^ anAccount transactions
-	
+"
+	accounts detect: [:managedAccount | managedAccount doesManage: anAccount ] 
+	ifNone: [^ self error: self class accountNotManagedMessageDescription].
+ 
+	^ anAccount transactions	
 	! !
 
 
@@ -229,13 +233,6 @@ register: aTransaction
 transactions 
 
 	^ transactions copy! !
-
-!ReceptiveAccount methodsFor: 'transactions' stamp: 'PML 10/13/2018 21:41:20'!
-transactionsOf: anAccount
-
-	^anAccount transactions
-
-! !
 
 
 !ReceptiveAccount methodsFor: 'balance' stamp: 'PML 10/11/2018 21:05:12'!
