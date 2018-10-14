@@ -5,6 +5,11 @@ Object subclass: #AccountTransaction
 	poolDictionaries: ''
 	category: 'Portfolio-Ejercicio'!
 
+!AccountTransaction methodsFor: 'value' stamp: 'PML 10/14/2018 15:16:24'!
+netValue 
+
+	self subclassResponsibility ! !
+
 !AccountTransaction methodsFor: 'value' stamp: 'HernanWilkinson 9/12/2011 12:25'!
 value 
 
@@ -40,6 +45,11 @@ initializeFor: aValue
 	value := aValue ! !
 
 
+!Deposit methodsFor: 'value' stamp: 'PML 10/14/2018 15:16:45'!
+netValue
+	
+	^ self value! !
+
 !Deposit methodsFor: 'value' stamp: 'HernanWilkinson 7/13/2011 18:38'!
 value
 
@@ -69,6 +79,11 @@ initializeFor: aValue
 
 	value := aValue ! !
 
+
+!Withdraw methodsFor: 'value' stamp: 'PML 10/14/2018 15:16:55'!
+netValue
+	
+	^ self value negated ! !
 
 !Withdraw methodsFor: 'value' stamp: 'HernanWilkinson 7/13/2011 18:33'!
 value
@@ -235,21 +250,17 @@ transactions
 	^ transactions copy! !
 
 
-!ReceptiveAccount methodsFor: 'balance' stamp: 'PML 10/11/2018 21:05:12'!
+!ReceptiveAccount methodsFor: 'balance' stamp: 'PML 10/14/2018 15:25:08'!
 balance
 
-	^ transactions sum: [ :aTransaction | (aTransaction isKindOf: Deposit) 
-		ifTrue: [ aTransaction value] 
-		ifFalse: [ aTransaction value negated ] ] 
-	ifEmpty: [0]! !
+	^ transactions inject: 0 into: [:total :aTransaction | total + aTransaction netValue ] ! !
 
 
-!ReceptiveAccount methodsFor: 'testing' stamp: 'PML 10/14/2018 02:58:43'!
+!ReceptiveAccount methodsFor: 'testing' stamp: 'PML 10/14/2018 15:29:22'!
 doesManage: anAccount
 
 	(anAccount isKindOf: Portfolio) ifTrue: [ ^anAccount doesManage: self]. 
-	^ self = anAccount 
-! !
+	^ self = anAccount ! !
 
 !ReceptiveAccount methodsFor: 'testing' stamp: 'HAW 10/11/2018 16:53:54'!
 hasRegistered: aTtransaction
