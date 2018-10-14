@@ -130,20 +130,15 @@ balance
 	^ accounts sum: [ :account | account balance ] ! !
 
 
-!Portfolio methodsFor: 'testing' stamp: 'PML 10/14/2018 02:28:24'!
+!Portfolio methodsFor: 'testing' stamp: 'PML 10/14/2018 02:54:25'!
 doesManage: anAccount
 
-	accounts detect: [ :aManagedAccount | aManagedAccount doesManage: anAccount ] ifNone: [ ^anAccount = self].
-	^ true 
-"
-	^accounts anySatisfy: [:anElement | anElement = anAccount or: (anAccount doesManage: anElement)]
-"! !
+	^accounts anySatisfy: [ :aManagedAccount | aManagedAccount = anAccount or: (anAccount doesManage: aManagedAccount) ]! !
 
-!Portfolio methodsFor: 'testing' stamp: 'PML 10/11/2018 21:29:12'!
+!Portfolio methodsFor: 'testing' stamp: 'PML 10/14/2018 02:55:38'!
 hasRegistered: aTransaction
 
-	accounts detect: [ :anAccount | anAccount hasRegistered: aTransaction ] ifNone: [ ^false ].
-	^ true ! !
+	^ accounts anySatisfy: [ :anAccount | anAccount hasRegistered: aTransaction ]! !
 
 
 !Portfolio methodsFor: 'transactions' stamp: 'PML 10/14/2018 01:58:27'!
@@ -252,7 +247,7 @@ balance
 	ifEmpty: [0]! !
 
 
-!ReceptiveAccount methodsFor: 'testing' stamp: 'PML 10/14/2018 02:37:45'!
+!ReceptiveAccount methodsFor: 'testing' stamp: 'PML 10/14/2018 02:58:43'!
 doesManage: anAccount
 
 	(anAccount isKindOf: Portfolio) ifTrue: [ ^anAccount doesManage: self]. 
