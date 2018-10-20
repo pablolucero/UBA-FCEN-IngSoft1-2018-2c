@@ -5,7 +5,6 @@ Object subclass: #AccountTransaction
 	poolDictionaries: ''
 	category: 'PortfolioTreePrinter-Ejercicio'!
 
-
 !AccountTransaction methodsFor: 'evaluating' stamp: 'HAW 10/18/2018 18:48:48'!
 affectBalance: currentBalance
 
@@ -27,20 +26,20 @@ summaryLine
 AccountTransaction class
 	instanceVariableNames: ''!
 
-!AccountTransaction class methodsFor: 'instance creation' stamp: 'HernanWilkinson 7/13/2011 18:38'!
+!AccountTransaction class methodsFor: 'instance creation' stamp: 'HGZ 10/20/2018 13:01:58'!
 register: aValue on: account
 
-	| withdraw |
+	| transaction |
 	
-	withdraw := self for: aValue.
-	account register: withdraw.
+	transaction := self for: aValue.
+	account register: transaction.
 		
-	^ withdraw! !
+	^ transaction! !
 
 
 !classDefinition: #CertificateOfDeposit category: #'PortfolioTreePrinter-Ejercicio'!
 AccountTransaction subclass: #CertificateOfDeposit
-	instanceVariableNames: 'value'
+	instanceVariableNames: 'value interestRate numberOfDays'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'PortfolioTreePrinter-Ejercicio'!
@@ -51,10 +50,24 @@ affectBalance: currentBalance
 	^currentBalance - value! !
 
 
-!CertificateOfDeposit methodsFor: 'initialization' stamp: 'PML 10/18/2018 21:44:44'!
-initializeFor: aValue
-	value _ aValue ! !
+!CertificateOfDeposit methodsFor: 'initialization' stamp: 'HGZ 10/20/2018 13:05:30'!
+initializeFor: anAmount during: aNumberOfDays at: anInterestRate
+	value _ anAmount.
+	numberOfDays _ aNumberOfDays.
+	interestRate _ anInterestRate ! !
 
+
+!CertificateOfDeposit methodsFor: 'accessing' stamp: 'HGZ 10/20/2018 13:14:22'!
+interestRate
+	^interestRate! !
+
+!CertificateOfDeposit methodsFor: 'accessing' stamp: 'HGZ 10/20/2018 13:14:32'!
+numberOfDays
+	^numberOfDays! !
+
+!CertificateOfDeposit methodsFor: 'accessing' stamp: 'HGZ 10/20/2018 13:32:30'!
+summaryLine
+	^'Plazo fijo por ' , value printString , ' durante ' , numberOfDays printString , ' dias a una tna de ' , (100 * interestRate) printString , '%'! !
 
 !CertificateOfDeposit methodsFor: 'accessing' stamp: 'PML 10/18/2018 21:50:39'!
 value
@@ -66,10 +79,20 @@ value
 CertificateOfDeposit class
 	instanceVariableNames: ''!
 
-!CertificateOfDeposit class methodsFor: 'instance creation' stamp: 'PML 10/18/2018 21:42:41'!
-for: aValue
+!CertificateOfDeposit class methodsFor: 'instance creation' stamp: 'HGZ 10/20/2018 13:04:40'!
+for: anAmount during: aNumberOfDays at: anInterestRate
 
-	^ self new initializeFor: aValue ! !
+	^ self new initializeFor: anAmount during: aNumberOfDays at: anInterestRate! !
+
+!CertificateOfDeposit class methodsFor: 'instance creation' stamp: 'HGZ 10/20/2018 13:13:11'!
+register: anAmount during: aNumberOfDays at: anInterestRate on: anAccount
+
+	| transaction |
+	
+	transaction := self for: anAmount during: aNumberOfDays at: anInterestRate.
+	anAccount registerCertificateOfDeposit: transaction.
+		
+	^ transaction! !
 
 
 !classDefinition: #Deposit category: #'PortfolioTreePrinter-Ejercicio'!
@@ -112,16 +135,6 @@ for: aValue
 
 	^ self new initializeFor: aValue ! !
 
-!Deposit class methodsFor: 'instance creation' stamp: 'HernanWilkinson 7/13/2011 19:41'!
-register: aValue on: account
-
-	| withdraw |
-	
-	withdraw := self for: aValue.
-	account register: withdraw.
-		
-	^ withdraw! !
-
 
 !classDefinition: #LegTransfer category: #'PortfolioTreePrinter-Ejercicio'!
 AccountTransaction subclass: #LegTransfer
@@ -136,10 +149,10 @@ initializeFor: aTransfer
 	transfer  _ aTransfer ! !
 
 
-!LegTransfer methodsFor: 'accessing' stamp: 'PML 10/18/2018 21:03:51'!
+!LegTransfer methodsFor: 'accessing' stamp: 'HGZ 10/20/2018 12:49:50'!
 summaryLine
 	
-	^'Transferencia por ', self  printString ! !
+	^'Transferencia por ', (self affectBalance: 0) printString ! !
 
 !LegTransfer methodsFor: 'accessing' stamp: 'PML 10/18/2018 20:00:59'!
 transfer
@@ -228,16 +241,6 @@ for: aValue
 
 	^ self new initializeFor: aValue ! !
 
-!Withdraw class methodsFor: 'instance creation' stamp: 'HernanWilkinson 7/14/2011 05:32'!
-register: aValue on: account
-
-	| withdraw |
-	
-	withdraw := self for: aValue.
-	account register: withdraw.
-		
-	^ withdraw! !
-
 
 !classDefinition: #SummarizingAccount category: #'PortfolioTreePrinter-Ejercicio'!
 Object subclass: #SummarizingAccount
@@ -266,7 +269,6 @@ balance
 transactions
 
 	self subclassResponsibility ! !
-
 
 
 !SummarizingAccount methodsFor: 'accounts' stamp: 'PML 10/14/2018 17:48:28'!
@@ -414,17 +416,19 @@ SummarizingAccount subclass: #ReceptiveAccount
 	poolDictionaries: ''
 	category: 'PortfolioTreePrinter-Ejercicio'!
 
-!ReceptiveAccount methodsFor: 'initialization' stamp: 'HernanWilkinson 7/13/2011 18:35'!
+!ReceptiveAccount methodsFor: 'initialization' stamp: 'HGZ 10/20/2018 13:09:41'!
 initialize
 
 	super initialize.
-	transactions := OrderedCollection new.! !
+	transactions := OrderedCollection new.
+	certificatesOfDeposit := OrderedCollection new.! !
 
 
-!ReceptiveAccount methodsFor: 'transactions' stamp: 'HAW 10/18/2018 18:49:23'!
+!ReceptiveAccount methodsFor: 'transactions' stamp: 'HGZ 10/20/2018 13:37:00'!
 balance
 
-	^ transactions inject: 0 into: [ :balance :transaction | transaction affectBalance: balance ]! !
+	^(transactions inject: 0 into: [ :balance :transaction | transaction affectBalance: balance ]) +
+	(certificatesOfDeposit inject: 0 into: [ :balance :transaction | transaction affectBalance: balance ])! !
 
 !ReceptiveAccount methodsFor: 'transactions' stamp: 'HernanWilkinson 7/13/2011 18:37'!
 register: aTransaction
@@ -436,7 +440,6 @@ register: aTransaction
 transactions 
 
 	^ transactions copy! !
-
 
 
 !ReceptiveAccount methodsFor: 'testing' stamp: 'HAW 10/18/2018 16:31:24'!
@@ -457,18 +460,32 @@ managedAccounts
 	
 	^ Set with: self! !
 
+!ReceptiveAccount methodsFor: 'accounts' stamp: 'HGZ 10/20/2018 13:14:08'!
+registerCertificateOfDeposit: aCertificateOfDeposit 
+	certificatesOfDeposit add: aCertificateOfDeposit ! !
 
-!ReceptiveAccount methodsFor: 'accessing' stamp: 'PML 10/18/2018 21:50:16'!
+
+!ReceptiveAccount methodsFor: 'accessing' stamp: 'HGZ 10/20/2018 13:08:47'!
+investmentEarnings
+	^certificatesOfDeposit inject: 0 into: [:sum :aTrx |
+		sum + (aTrx value * (aTrx interestRate / 360) * aTrx numberOfDays )].! !
+
+!ReceptiveAccount methodsFor: 'accessing' stamp: 'HGZ 10/20/2018 13:35:56'!
 investmentNet
-	^ (transactions select: [:trx | trx isKindOf: CertificateOfDeposit ] ) inject: 0 into: [ :balance :transaction | transaction value + balance ]! !
+	"^ (transactions select: [:trx | trx isKindOf: CertificateOfDeposit ] ) inject: 0 into: [ :balance :transaction | transaction value + balance ]"
+	^certificatesOfDeposit inject: 0 into: [ :balance :cod | cod value + balance ]! !
 
-!ReceptiveAccount methodsFor: 'accessing' stamp: 'PML 10/18/2018 20:09:56'!
+!ReceptiveAccount methodsFor: 'accessing' stamp: 'HGZ 10/20/2018 13:24:59'!
 summaryLines
 	
-	^ transactions inject: OrderedCollection new into: [ :lines :trx | 
+	^ (transactions inject: OrderedCollection new into: [ :lines :trx | 
 			lines add: trx summaryLine.
 			lines
-		] ! !
+		]),
+	(certificatesOfDeposit inject: OrderedCollection new into: [ :lines :cod | 
+			lines add: cod summaryLine.
+			lines
+		])! !
 
 
 !ReceptiveAccount methodsFor: 'operations' stamp: 'PML 10/18/2018 21:13:41'!

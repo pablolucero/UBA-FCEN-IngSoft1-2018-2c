@@ -528,40 +528,40 @@ test29ReversePortfolioTreePrinterPrintsTheCompositeStartingFromTheLeaves
 	! !
 
 
-!PortfolioTest methodsFor: 'test support' stamp: 'HAW 5/10/2018 19:22:21'!
+!PortfolioTest methodsFor: 'test support' stamp: 'HGZ 10/20/2018 12:45:33'!
 accountSummaryLinesOf: aReceptiveAccount 
 	
-	self shouldBeImplemented ! !
+	^aReceptiveAccount summaryLines ! !
 
-!PortfolioTest methodsFor: 'test support' stamp: 'HernanWilkinson 9/6/2016 19:43'!
+!PortfolioTest methodsFor: 'test support' stamp: 'HGZ 10/20/2018 13:32:57'!
 accountTransferNetOf: aReceptiveAccount 
 	
-	self shouldBeImplemented ! !
+	^aReceptiveAccount transfersNet ! !
 
-!PortfolioTest methodsFor: 'test support' stamp: 'HernanWilkinson 9/6/2016 19:43'!
+!PortfolioTest methodsFor: 'test support' stamp: 'HGZ 10/20/2018 12:55:28'!
 investmentEarningsOf: aReceptiveAccount 
 	
-	self shouldBeImplemented ! !
+	^aReceptiveAccount investmentEarnings! !
 
-!PortfolioTest methodsFor: 'test support' stamp: 'HernanWilkinson 9/6/2016 19:43'!
+!PortfolioTest methodsFor: 'test support' stamp: 'HGZ 10/20/2018 12:54:35'!
 investmentNetOf: aReceptiveAccount 
 	
-	self shouldBeImplemented ! !
+	^aReceptiveAccount investmentNet ! !
 
 !PortfolioTest methodsFor: 'test support' stamp: 'HernanWilkinson 9/6/2016 19:43'!
 portofolioTreeOf: aPortfolio namingAccountWith: aDictionary 
 	
 	self shouldBeImplemented ! !
 
-!PortfolioTest methodsFor: 'test support' stamp: 'HAW 10/18/2018 16:38:05'!
+!PortfolioTest methodsFor: 'test support' stamp: 'HGZ 10/20/2018 13:06:30'!
 registerCertificateOfDepositOf: anAmount during: aNumberOfDays at: anInteresRate on: anAccount
 
-	self shouldBeImplemented ! !
+	CertificateOfDeposit register: anAmount during: aNumberOfDays at: anInteresRate on: anAccount ! !
 
-!PortfolioTest methodsFor: 'test support' stamp: 'HAW 10/18/2018 16:37:27'!
+!PortfolioTest methodsFor: 'test support' stamp: 'HGZ 10/20/2018 12:44:59'!
 registerTransferOf: anAmount from: fromAccount to: toAccount
 
-	self shouldBeImplemented ! !
+	^Transfer register: anAmount from: fromAccount to: toAccount ! !
 
 !PortfolioTest methodsFor: 'test support' stamp: 'HernanWilkinson 9/6/2016 19:43'!
 reversePortofolioTreeOf: aPortfolio namingAccountWith: aDictionary 
