@@ -84,13 +84,13 @@ for: anAmount during: aNumberOfDays at: anInterestRate
 
 	^ self new initializeFor: anAmount during: aNumberOfDays at: anInterestRate! !
 
-!CertificateOfDeposit class methodsFor: 'instance creation' stamp: 'HGZ 10/20/2018 13:13:11'!
+!CertificateOfDeposit class methodsFor: 'instance creation' stamp: 'HGZ 10/20/2018 13:45:28'!
 register: anAmount during: aNumberOfDays at: anInterestRate on: anAccount
 
 	| transaction |
 	
 	transaction := self for: anAmount during: aNumberOfDays at: anInterestRate.
-	anAccount registerCertificateOfDeposit: transaction.
+	anAccount register: transaction.
 		
 	^ transaction! !
 
@@ -411,24 +411,22 @@ checkNoCircularReferencesIn: aCollectionOfAccounts
 
 !classDefinition: #ReceptiveAccount category: #'PortfolioTreePrinter-Ejercicio'!
 SummarizingAccount subclass: #ReceptiveAccount
-	instanceVariableNames: 'transactions certificatesOfDeposit'
+	instanceVariableNames: 'transactions'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'PortfolioTreePrinter-Ejercicio'!
 
-!ReceptiveAccount methodsFor: 'initialization' stamp: 'HGZ 10/20/2018 13:09:41'!
+!ReceptiveAccount methodsFor: 'initialization' stamp: 'HGZ 10/20/2018 13:44:48'!
 initialize
 
 	super initialize.
-	transactions := OrderedCollection new.
-	certificatesOfDeposit := OrderedCollection new.! !
+	transactions := OrderedCollection new.! !
 
 
-!ReceptiveAccount methodsFor: 'transactions' stamp: 'HGZ 10/20/2018 13:37:00'!
+!ReceptiveAccount methodsFor: 'transactions' stamp: 'HGZ 10/20/2018 13:45:03'!
 balance
 
-	^(transactions inject: 0 into: [ :balance :transaction | transaction affectBalance: balance ]) +
-	(certificatesOfDeposit inject: 0 into: [ :balance :transaction | transaction affectBalance: balance ])! !
+	^transactions inject: 0 into: [ :balance :transaction | transaction affectBalance: balance ]! !
 
 !ReceptiveAccount methodsFor: 'transactions' stamp: 'HernanWilkinson 7/13/2011 18:37'!
 register: aTransaction
@@ -460,32 +458,23 @@ managedAccounts
 	
 	^ Set with: self! !
 
-!ReceptiveAccount methodsFor: 'accounts' stamp: 'HGZ 10/20/2018 13:14:08'!
-registerCertificateOfDeposit: aCertificateOfDeposit 
-	certificatesOfDeposit add: aCertificateOfDeposit ! !
 
-
-!ReceptiveAccount methodsFor: 'accessing' stamp: 'HGZ 10/20/2018 13:08:47'!
+!ReceptiveAccount methodsFor: 'accessing' stamp: 'HGZ 10/20/2018 13:46:17'!
 investmentEarnings
-	^certificatesOfDeposit inject: 0 into: [:sum :aTrx |
+	^(transactions select: [:trx | trx isKindOf: CertificateOfDeposit ]) inject: 0 into: [:sum :aTrx |
 		sum + (aTrx value * (aTrx interestRate / 360) * aTrx numberOfDays )].! !
 
-!ReceptiveAccount methodsFor: 'accessing' stamp: 'HGZ 10/20/2018 13:35:56'!
+!ReceptiveAccount methodsFor: 'accessing' stamp: 'HGZ 10/20/2018 13:46:07'!
 investmentNet
-	"^ (transactions select: [:trx | trx isKindOf: CertificateOfDeposit ] ) inject: 0 into: [ :balance :transaction | transaction value + balance ]"
-	^certificatesOfDeposit inject: 0 into: [ :balance :cod | cod value + balance ]! !
+	^ (transactions select: [:trx | trx isKindOf: CertificateOfDeposit ]) inject: 0 into: [ :balance :transaction | transaction value + balance ]! !
 
-!ReceptiveAccount methodsFor: 'accessing' stamp: 'HGZ 10/20/2018 13:24:59'!
+!ReceptiveAccount methodsFor: 'accessing' stamp: 'HGZ 10/20/2018 13:45:40'!
 summaryLines
 	
-	^ (transactions inject: OrderedCollection new into: [ :lines :trx | 
+	^transactions inject: OrderedCollection new into: [ :lines :trx | 
 			lines add: trx summaryLine.
 			lines
-		]),
-	(certificatesOfDeposit inject: OrderedCollection new into: [ :lines :cod | 
-			lines add: cod summaryLine.
-			lines
-		])! !
+		]! !
 
 
 !ReceptiveAccount methodsFor: 'operations' stamp: 'PML 10/18/2018 21:13:41'!
