@@ -16,8 +16,9 @@ value
 	self subclassResponsibility ! !
 
 
-!AccountTransaction methodsFor: 'accessing' stamp: 'PML 10/18/2018 20:10:54'!
-summaryLine
+
+!AccountTransaction methodsFor: 'as yet unclassified' stamp: 'PML 10/22/2018 19:10:59'!
+accept: aVisitor
 	self subclassResponsibility ! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
@@ -65,13 +66,14 @@ interestRate
 numberOfDays
 	^numberOfDays! !
 
-!CertificateOfDeposit methodsFor: 'accessing' stamp: 'HGZ 10/20/2018 13:32:30'!
-summaryLine
-	^'Plazo fijo por ' , value printString , ' durante ' , numberOfDays printString , ' dias a una tna de ' , (100 * interestRate) printString , '%'! !
-
 !CertificateOfDeposit methodsFor: 'accessing' stamp: 'PML 10/18/2018 21:50:39'!
 value
 	^value! !
+
+
+!CertificateOfDeposit methodsFor: 'as yet unclassified' stamp: 'PML 10/22/2018 19:10:32'!
+accept: aVisitor
+	^aVisitor visitCertificateOfDeposit: self! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
@@ -119,10 +121,10 @@ value
 	^ value! !
 
 
-!Deposit methodsFor: 'accessing' stamp: 'PML 10/18/2018 21:06:12'!
-summaryLine
-	
-	^'Deposito por ', (self affectBalance: 0) printString ! !
+
+!Deposit methodsFor: 'as yet unclassified' stamp: 'PML 10/22/2018 19:09:51'!
+accept: aVisitor
+	^aVisitor visitDeposit: self! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
@@ -149,11 +151,6 @@ initializeFor: aTransfer
 	transfer  _ aTransfer ! !
 
 
-!LegTransfer methodsFor: 'accessing' stamp: 'HGZ 10/20/2018 12:49:50'!
-summaryLine
-	
-	^'Transferencia por ', (self affectBalance: 0) printString ! !
-
 !LegTransfer methodsFor: 'accessing' stamp: 'PML 10/18/2018 20:00:59'!
 transfer
 	^transfer! !
@@ -162,6 +159,11 @@ transfer
 !LegTransfer methodsFor: 'value' stamp: 'PML 10/18/2018 20:42:41'!
 value
 	^transfer value! !
+
+
+!LegTransfer methodsFor: 'as yet unclassified' stamp: 'PML 10/22/2018 19:10:02'!
+accept: aVisitor
+	^aVisitor visitLegTransfer: self! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
@@ -225,10 +227,10 @@ value
 	^ value ! !
 
 
-!Withdraw methodsFor: 'accessing' stamp: 'PML 10/18/2018 20:12:45'!
-summaryLine
-	
-	^ 'Extraccion por ', value printString ! !
+
+!Withdraw methodsFor: 'as yet unclassified' stamp: 'PML 10/22/2018 19:10:18'!
+accept: aVisitor
+	^aVisitor visitWithdraw: self! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
@@ -240,6 +242,91 @@ Withdraw class
 for: aValue
 
 	^ self new initializeFor: aValue ! !
+
+
+!classDefinition: #InvestmentEarningsVisitor category: #'PortfolioTreePrinter-Ejercicio'!
+Object subclass: #InvestmentEarningsVisitor
+	instanceVariableNames: 'account'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'PortfolioTreePrinter-Ejercicio'!
+
+!InvestmentEarningsVisitor methodsFor: 'as yet unclassified' stamp: 'PML 10/22/2018 19:31:25'!
+initializeFor: aReceptiveAccount
+	account _ aReceptiveAccount ! !
+
+!InvestmentEarningsVisitor methodsFor: 'as yet unclassified' stamp: 'PML 10/22/2018 19:34:03'!
+visitCertificateOfDeposit: aCertificateOfDeposit
+	^ aCertificateOfDeposit value * (aCertificateOfDeposit interestRate / 360) * aCertificateOfDeposit numberOfDays! !
+
+!InvestmentEarningsVisitor methodsFor: 'as yet unclassified' stamp: 'PML 10/22/2018 19:35:54'!
+visitDeposit: aDeposit
+	^0! !
+
+!InvestmentEarningsVisitor methodsFor: 'as yet unclassified' stamp: 'PML 10/22/2018 19:36:04'!
+visitLegTransfer: aLegTransfer
+	^ 0! !
+
+!InvestmentEarningsVisitor methodsFor: 'as yet unclassified' stamp: 'PML 10/22/2018 19:36:12'!
+visitWithdraw: aWithdraw
+	^0! !
+
+
+!InvestmentEarningsVisitor methodsFor: 'evaluating' stamp: 'PML 10/22/2018 19:36:34'!
+value
+	^(account visitAllTransactions: self) sum! !
+
+"-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
+
+!classDefinition: 'InvestmentEarningsVisitor class' category: #'PortfolioTreePrinter-Ejercicio'!
+InvestmentEarningsVisitor class
+	instanceVariableNames: ''!
+
+!InvestmentEarningsVisitor class methodsFor: 'as yet unclassified' stamp: 'PML 10/22/2018 19:30:41'!
+for: aReceptiveAccount
+	^ self new initializeFor: aReceptiveAccount ! !
+
+
+!classDefinition: #InvestmentNetVisitor category: #'PortfolioTreePrinter-Ejercicio'!
+Object subclass: #InvestmentNetVisitor
+	instanceVariableNames: 'account'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'PortfolioTreePrinter-Ejercicio'!
+
+!InvestmentNetVisitor methodsFor: 'as yet unclassified' stamp: 'PML 10/22/2018 19:40:47'!
+initializeFor: aReceptiveAccount
+	account _ aReceptiveAccount ! !
+
+!InvestmentNetVisitor methodsFor: 'as yet unclassified' stamp: 'PML 10/22/2018 19:41:14'!
+value
+	^(account visitAllTransactions: self) sum! !
+
+!InvestmentNetVisitor methodsFor: 'as yet unclassified' stamp: 'PML 10/22/2018 19:42:21'!
+visitCertificateOfDeposit: aCertificateOfDeposit
+	^aCertificateOfDeposit value ! !
+
+!InvestmentNetVisitor methodsFor: 'as yet unclassified' stamp: 'PML 10/22/2018 19:42:29'!
+visitDeposit: aDeposit
+	^0! !
+
+!InvestmentNetVisitor methodsFor: 'as yet unclassified' stamp: 'PML 10/22/2018 19:42:43'!
+visitLegTransfer: aLegTransfer
+	^0! !
+
+!InvestmentNetVisitor methodsFor: 'as yet unclassified' stamp: 'PML 10/22/2018 19:42:48'!
+visitWithdraw: aWithdraw
+	^0! !
+
+"-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
+
+!classDefinition: 'InvestmentNetVisitor class' category: #'PortfolioTreePrinter-Ejercicio'!
+InvestmentNetVisitor class
+	instanceVariableNames: ''!
+
+!InvestmentNetVisitor class methodsFor: 'as yet unclassified' stamp: 'PML 10/22/2018 19:39:55'!
+for: aReceptiveAccount
+	^self new initializeFor: aReceptiveAccount ! !
 
 
 !classDefinition: #SummarizingAccount category: #'PortfolioTreePrinter-Ejercicio'!
@@ -346,13 +433,22 @@ initializeWithAll: aCollectionOfAccounts
 	accounts := aCollectionOfAccounts   ! !
 
 
-!Portfolio methodsFor: 'accounts' stamp: 'PML 10/14/2018 18:40:59'!
+!Portfolio methodsFor: 'accounts' stamp: 'PML 10/22/2018 19:57:43'!
 managedAccounts
 
-	^ accounts inject: Set new into: [ :allAccounts :anAccount |
+	^ accounts inject: OrderedCollection new into: [ :allAccounts :anAccount |
 			allAccounts addAll: anAccount managedAccounts.
 			allAccounts
 		] ! !
+
+
+!Portfolio methodsFor: 'printing' stamp: 'PML 10/22/2018 20:38:00'!
+printTreeWithNames: aDictionary level: whiteSpaces 
+	
+	^accounts inject: (OrderedCollection with: (  (String new: whiteSpaces) atAllPut: $ ), (aDictionary at: self)  ) into: [:res :anAccount |
+		res addAll: (anAccount printTreeWithNames: aDictionary level: whiteSpaces + 1).
+		res
+	]! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
@@ -459,32 +555,63 @@ managedAccounts
 	^ Set with: self! !
 
 
-!ReceptiveAccount methodsFor: 'accessing' stamp: 'HGZ 10/20/2018 13:46:17'!
-investmentEarnings
-	^(transactions select: [:trx | trx isKindOf: CertificateOfDeposit ]) inject: 0 into: [:sum :aTrx |
-		sum + (aTrx value * (aTrx interestRate / 360) * aTrx numberOfDays )].! !
-
-!ReceptiveAccount methodsFor: 'accessing' stamp: 'HGZ 10/20/2018 13:46:07'!
-investmentNet
-	^ (transactions select: [:trx | trx isKindOf: CertificateOfDeposit ]) inject: 0 into: [ :balance :transaction | transaction value + balance ]! !
-
-!ReceptiveAccount methodsFor: 'accessing' stamp: 'HGZ 10/20/2018 13:45:40'!
-summaryLines
-	
-	^transactions inject: OrderedCollection new into: [ :lines :trx | 
-			lines add: trx summaryLine.
-			lines
-		]! !
-
-
-!ReceptiveAccount methodsFor: 'operations' stamp: 'PML 10/18/2018 21:13:41'!
-transfersNet
-	^ (transactions select: [:trx | trx isKindOf: LegTransfer ] ) inject: 0 into: [ :balance :transaction | transaction affectBalance: balance ]! !
 
 
 !ReceptiveAccount methodsFor: 'associating' stamp: 'PML 10/18/2018 21:41:04'!
 registerCertificateOfDepositOf: anAmount during: aNumberOfDays at: anInterestRate
 	CertificateOfDeposit register: anAmount on: self! !
+
+
+!ReceptiveAccount methodsFor: 'as yet unclassified' stamp: 'PML 10/22/2018 19:21:17'!
+visitAllTransactions: aVisitor
+	^transactions collect: [:trx | trx accept: aVisitor]! !
+
+
+!ReceptiveAccount methodsFor: 'printing' stamp: 'PML 10/22/2018 20:37:32'!
+printTreeWithNames: aDictionary level: whiteSpaces 
+  ^OrderedCollection with: (((String new: whiteSpaces) atAllPut: $ ), (aDictionary at: self))! !
+
+
+!classDefinition: #SummaryLinesVisitor category: #'PortfolioTreePrinter-Ejercicio'!
+Object subclass: #SummaryLinesVisitor
+	instanceVariableNames: 'account'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'PortfolioTreePrinter-Ejercicio'!
+
+!SummaryLinesVisitor methodsFor: 'as yet unclassified' stamp: 'PML 10/22/2018 19:02:29'!
+initializeFor: aReceptiveAccount
+	account _ aReceptiveAccount ! !
+
+!SummaryLinesVisitor methodsFor: 'as yet unclassified' stamp: 'PML 10/22/2018 19:06:39'!
+value
+	^account visitAllTransactions: self! !
+
+!SummaryLinesVisitor methodsFor: 'as yet unclassified' stamp: 'PML 10/22/2018 18:58:46'!
+visitCertificateOfDeposit: aCertificateOfDeposit
+	^ 'Plazo fijo por ' , aCertificateOfDeposit value printString , ' durante ' , aCertificateOfDeposit numberOfDays printString , ' dias a una tna de ' , (100 * aCertificateOfDeposit interestRate) printString , '%' ! !
+
+!SummaryLinesVisitor methodsFor: 'as yet unclassified' stamp: 'PML 10/22/2018 18:55:34'!
+visitDeposit: aDeposit
+	^'Deposito por ', (aDeposit affectBalance: 0) printString ! !
+
+!SummaryLinesVisitor methodsFor: 'as yet unclassified' stamp: 'PML 10/22/2018 19:11:34'!
+visitLegTransfer: aLegTransfer
+	^'Transferencia por ', (aLegTransfer affectBalance: 0) printString ! !
+
+!SummaryLinesVisitor methodsFor: 'as yet unclassified' stamp: 'PML 10/22/2018 18:57:42'!
+visitWithdraw: aWithdraw
+	^ 'Extraccion por ', aWithdraw value printString ! !
+
+"-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
+
+!classDefinition: 'SummaryLinesVisitor class' category: #'PortfolioTreePrinter-Ejercicio'!
+SummaryLinesVisitor class
+	instanceVariableNames: ''!
+
+!SummaryLinesVisitor class methodsFor: 'as yet unclassified' stamp: 'PML 10/22/2018 19:01:37'!
+for: aReceptiveAccount
+	^self new initializeFor: aReceptiveAccount ! !
 
 
 !classDefinition: #Transfer category: #'PortfolioTreePrinter-Ejercicio'!
@@ -536,3 +663,45 @@ register: anAmount from: aReceptiveAccount to: aReceptiveAccount2
 	aReceptiveAccount register: transfer withdrawLeg.
 	aReceptiveAccount2 register: transfer depositLeg.		
 	^ transfer! !
+
+
+!classDefinition: #TransferNetVisitor category: #'PortfolioTreePrinter-Ejercicio'!
+Object subclass: #TransferNetVisitor
+	instanceVariableNames: 'account'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'PortfolioTreePrinter-Ejercicio'!
+
+!TransferNetVisitor methodsFor: 'as yet unclassified' stamp: 'PML 10/22/2018 19:16:07'!
+initializeFor: aReceptiveAccount
+	account _ aReceptiveAccount ! !
+
+!TransferNetVisitor methodsFor: 'as yet unclassified' stamp: 'PML 10/22/2018 19:23:26'!
+value
+	^(account visitAllTransactions: self) sum! !
+
+!TransferNetVisitor methodsFor: 'as yet unclassified' stamp: 'PML 10/22/2018 19:24:16'!
+visitCertificateOfDeposit: aCertificateOfDeposit
+	^0! !
+
+!TransferNetVisitor methodsFor: 'as yet unclassified' stamp: 'PML 10/22/2018 19:18:09'!
+visitDeposit: aDeposit
+	^0! !
+
+!TransferNetVisitor methodsFor: 'as yet unclassified' stamp: 'PML 10/22/2018 19:19:08'!
+visitLegTransfer: aLegTransfer
+	^aLegTransfer affectBalance: 0! !
+
+!TransferNetVisitor methodsFor: 'as yet unclassified' stamp: 'PML 10/22/2018 19:23:59'!
+visitWithdraw: aWithdraw
+	^0! !
+
+"-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
+
+!classDefinition: 'TransferNetVisitor class' category: #'PortfolioTreePrinter-Ejercicio'!
+TransferNetVisitor class
+	instanceVariableNames: ''!
+
+!TransferNetVisitor class methodsFor: 'as yet unclassified' stamp: 'PML 10/22/2018 19:15:40'!
+for: aReceptiveAccount
+	^self new initializeFor: aReceptiveAccount ! !

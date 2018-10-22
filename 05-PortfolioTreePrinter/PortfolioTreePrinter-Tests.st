@@ -473,7 +473,7 @@ test27ShouldBeAbleToBeQueryTransferNetWithCertificateOfDeposit
 	self assert: 150 equals: (self accountTransferNetOf: fromAccount).
 	self assert: -150 equals: (self accountTransferNetOf: toAccount).! !
 
-!PortfolioTest methodsFor: 'tests' stamp: 'HAW 10/18/2018 16:46:56'!
+!PortfolioTest methodsFor: 'tests' stamp: 'PML 10/22/2018 20:26:16'!
 test28PortfolioTreePrinterPrintsTheCompositeInDepthFirstOrder
 
 	| account1 account2 account3 complexPortfolio composedPortfolio accountNames lines |
@@ -492,7 +492,7 @@ test28PortfolioTreePrinterPrintsTheCompositeInDepthFirstOrder
 	accountNames at: account3 put: 'account3'.
 		
 	lines := self portofolioTreeOf: composedPortfolio namingAccountWith: accountNames.
-		
+
 	self assert: 5 equals: lines size.
 	self assert: 'composedPortfolio' equals: (lines at: 1).
 	self assert: ' complexPortfolio' equals: (lines at: 2).
@@ -528,30 +528,30 @@ test29ReversePortfolioTreePrinterPrintsTheCompositeStartingFromTheLeaves
 	! !
 
 
-!PortfolioTest methodsFor: 'test support' stamp: 'HGZ 10/20/2018 12:45:33'!
+!PortfolioTest methodsFor: 'test support' stamp: 'PML 10/22/2018 19:12:22'!
 accountSummaryLinesOf: aReceptiveAccount 
-	
-	^aReceptiveAccount summaryLines ! !
 
-!PortfolioTest methodsFor: 'test support' stamp: 'HGZ 10/20/2018 13:32:57'!
+	^(SummaryLinesVisitor for: aReceptiveAccount ) value! !
+
+!PortfolioTest methodsFor: 'test support' stamp: 'PML 10/22/2018 19:25:44'!
 accountTransferNetOf: aReceptiveAccount 
-	
-	^aReceptiveAccount transfersNet ! !
 
-!PortfolioTest methodsFor: 'test support' stamp: 'HGZ 10/20/2018 12:55:28'!
+	^(TransferNetVisitor for: aReceptiveAccount ) value! !
+
+!PortfolioTest methodsFor: 'test support' stamp: 'PML 10/22/2018 19:29:05'!
 investmentEarningsOf: aReceptiveAccount 
 	
-	^aReceptiveAccount investmentEarnings! !
+	^(InvestmentEarningsVisitor for: aReceptiveAccount) value! !
 
-!PortfolioTest methodsFor: 'test support' stamp: 'HGZ 10/20/2018 12:54:35'!
+!PortfolioTest methodsFor: 'test support' stamp: 'PML 10/22/2018 19:45:06'!
 investmentNetOf: aReceptiveAccount 
 	
-	^aReceptiveAccount investmentNet ! !
+	^(InvestmentNetVisitor for: aReceptiveAccount) value ! !
 
-!PortfolioTest methodsFor: 'test support' stamp: 'HernanWilkinson 9/6/2016 19:43'!
+!PortfolioTest methodsFor: 'test support' stamp: 'PML 10/22/2018 20:26:38'!
 portofolioTreeOf: aPortfolio namingAccountWith: aDictionary 
 	
-	self shouldBeImplemented ! !
+	^aPortfolio printTreeWithNames: aDictionary level:0! !
 
 !PortfolioTest methodsFor: 'test support' stamp: 'HGZ 10/20/2018 13:06:30'!
 registerCertificateOfDepositOf: anAmount during: aNumberOfDays at: anInteresRate on: anAccount
@@ -563,7 +563,7 @@ registerTransferOf: anAmount from: fromAccount to: toAccount
 
 	^Transfer register: anAmount from: fromAccount to: toAccount ! !
 
-!PortfolioTest methodsFor: 'test support' stamp: 'HernanWilkinson 9/6/2016 19:43'!
+!PortfolioTest methodsFor: 'test support' stamp: 'PML 10/22/2018 19:52:31'!
 reversePortofolioTreeOf: aPortfolio namingAccountWith: aDictionary 
 	
-	self shouldBeImplemented ! !
+	^(self portofolioTreeOf: aPortfolio namingAccountWith: aDictionary ) reverse ! !
