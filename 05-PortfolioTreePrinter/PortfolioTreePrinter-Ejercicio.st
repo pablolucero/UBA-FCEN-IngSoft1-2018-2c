@@ -571,6 +571,11 @@ visitAllTransactions: aVisitor
 printTreeWithNames: aDictionary level: whiteSpaces 
   ^OrderedCollection with: (((String new: whiteSpaces) atAllPut: $ ), (aDictionary at: self))! !
 
+!ReceptiveAccount methodsFor: 'printing' stamp: 'PML 10/22/2018 22:47:48'!
+printTreeWithNamesReversed: aDictionary level: whiteSpaces 
+	
+	^ (self printTreeWithNames: aDictionary level: whiteSpaces ) reverse! !
+
 
 !classDefinition: #SummaryLinesVisitor category: #'PortfolioTreePrinter-Ejercicio'!
 Object subclass: #SummaryLinesVisitor
