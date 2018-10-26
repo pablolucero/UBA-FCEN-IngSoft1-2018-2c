@@ -11,15 +11,21 @@ initializeFor: aReceptiveAccount
 	account := aReceptiveAccount ! !
 
 
-!AccountSummaryWithAllInvestmentInformation methodsFor: 'evaluating' stamp: 'HernanWilkinson 7/17/2011 23:58'!
+!AccountSummaryWithAllInvestmentInformation methodsFor: 'evaluating' stamp: 'PML 10/25/2018 21:43:31'!
 lines 
 
-	| lines investmentEarnings |
+	| lines investmentEarnings extraLine aSemaphore |
+	
+	aSemaphore _ Semaphore new.
 	
 	investmentEarnings := InvestmentNetVisitor for: account.
-	lines := (AccountSummaryWithInvestmentEarnings for: account) lines.
-	lines add: 'Inversiones por ', investmentEarnings value printString.
+	[ lines := (AccountSummaryWithInvestmentEarnings for: account) lines. aSemaphore signal ] fork .
+	[ extraLine _ 'Inversiones por ', investmentEarnings value printString. aSemaphore signal ] fork .
 	
+	aSemaphore wait.
+	aSemaphore wait.
+	
+	lines add: extraLine.
 	 ^ lines! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
@@ -47,14 +53,19 @@ initializeFor: aReceptiveAccount
 	account := aReceptiveAccount ! !
 
 
-!AccountSummaryWithInvestmentEarnings methodsFor: 'evaluating' stamp: 'HernanWilkinson 7/17/2011 23:53'!
+!AccountSummaryWithInvestmentEarnings methodsFor: 'evaluating' stamp: 'PML 10/25/2018 21:36:17'!
 lines 
 
-	| lines investmentEarnings |
+	| lines investmentEarnings aSemaphore extraLine|
 	
+	aSemaphore _ Semaphore new.
 	investmentEarnings := InvestmentEarningVisitor for: account.
-	lines := (AccountSummary for: account) lines.
-	lines add: 'Ganancias por ', investmentEarnings value printString.
+	[lines := (AccountSummary for: account) lines. aSemaphore signal. ] fork.
+	[extraLine _ 'Ganancias por ', investmentEarnings value printString.  aSemaphore signal. ] fork.
+	
+	aSemaphore wait.
+	aSemaphore wait.
+	lines add: extraLine.	
 	
 	 ^ lines! !
 
