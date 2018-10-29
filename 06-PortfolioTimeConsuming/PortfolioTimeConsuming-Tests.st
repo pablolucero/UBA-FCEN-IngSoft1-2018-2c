@@ -527,7 +527,7 @@ test29ReversePortfolioTreePrinterPrintsTheCompositeStartingFromTheLeaves
 	self assert: 'composedPortfolio' equals: (lines at: 5).
 	! !
 
-!PortfolioTest methodsFor: 'tests' stamp: 'HAW 8/13/2017 17:52:44'!
+!PortfolioTest methodsFor: 'tests' stamp: 'PML 10/25/2018 21:28:57'!
 test30AccountSummaryWithInvestmentEarningsShouldNotTakeTooLong
 
 	| fromAccount toAccount lines |
@@ -542,7 +542,7 @@ test30AccountSummaryWithInvestmentEarningsShouldNotTakeTooLong
 	self 
 		should: [ lines := (AccountSummaryWithInvestmentEarnings for: fromAccount) lines ]
 		notTakeMoreThanMilliseconds: 1100.	
-		
+	
 	self assert: 5 = lines size.
 	self assert: 'Deposito por 100' =  (lines at: 1).
 	self assert: 'Extraccion por 50' =  (lines at: 2).
