@@ -175,8 +175,8 @@ test15NoSePuedenPonerFicasFueraDelTablero
 	withExceptionDo: [ :anError | 
 			self assert: anError messageText = Juego errorPosicionInvalida]! !
 
-!TerniLapilliTests methodsFor: 'tests' stamp: 'PML 11/5/2018 19:01:14'!
-test16AlMoverUnaFichaSeActualizaElTablero
+!TerniLapilliTests methodsFor: 'tests' stamp: 'PML 11/5/2018 20:21:08'!
+test16AlMoverUnaFichaSeActualizaElTableroYElTurno
 	|juego|
 	juego _ Juego new.
 	
@@ -188,6 +188,7 @@ test16AlMoverUnaFichaSeActualizaElTablero
 	juego colocarFicha: 2@3.
 
 	juego moverFichaDe: 2@2 hacia: 3@2.
+	self assert: juego turno equals: $O.
 	self assert: (juego fichaEnPosicion: 2@2) equals: $_.
 	self assert: (juego fichaEnPosicion: 3@2) equals: $X.! !
 
@@ -297,15 +298,15 @@ test22OGanaPorColumna
 
 !classDefinition: #Juego category: #TpTerniLapilli!
 Object subclass: #Juego
-	instanceVariableNames: 'turno jugadasX jugadasO ganoX ganoO'
+	instanceVariableNames: 'turno jugadorX jugadorO ganoX ganoO'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'TpTerniLapilli'!
 
-!Juego methodsFor: 'accessing' stamp: 'PML 11/5/2018 17:28:57'!
+!Juego methodsFor: 'accessing' stamp: 'PML 11/5/2018 20:02:51'!
 fichaEnPosicion: aPoint
-	(jugadasX includes: aPoint) ifTrue: [^$X].
-	(jugadasO includes: aPoint) ifTrue: [^$O].
+	(jugadorX tieneFichaEn: aPoint) ifTrue: [^$X].
+	(jugadorX tieneFichaEn: aPoint) ifTrue: [^$O].
 	^$_! !
 
 !Juego methodsFor: 'accessing' stamp: 'PML 11/5/2018 17:19:42'!
@@ -321,11 +322,11 @@ turno
 	^turno! !
 
 
-!Juego methodsFor: 'initialization' stamp: 'PML 11/5/2018 17:24:19'!
+!Juego methodsFor: 'initialization' stamp: 'PML 11/5/2018 19:36:55'!
 initialize
 	turno _ $X.
-	jugadasX _ OrderedCollection new.
-	jugadasO _ OrderedCollection new.
+	jugadorX _ Jugador new.
+	jugadorO _ Jugador new.
 	ganoX _ false.
 	ganoO _ false! !
 
@@ -335,28 +336,28 @@ colocarFicha: aPoint
 	self chequearFichasDisponibles.
 	self ubicarFicha: aPoint ! !
 
-!Juego methodsFor: 'operations' stamp: 'PML 11/5/2018 19:06:48'!
+!Juego methodsFor: 'operations' stamp: 'PML 11/5/2018 20:28:14'!
 moverFichaDe: desde hacia: hasta
 	self chequearTableroCompleto.
 	turno = $X ifTrue: [
-		self chequerPosicionOcupada: desde en: jugadasX.
-		jugadasX remove: desde
+		self chequerPosicionOcupada: desde por: jugadorX.
+		jugadorX quitarFicha: desde.
 	] ifFalse: [
-		self chequerPosicionOcupada: desde en: jugadasO.
-		jugadasO remove: desde
+		self chequerPosicionOcupada: desde por: jugadorO.
+		jugadorO quitarFicha: desde.
 	].
 	self ubicarFicha: hasta! !
 
-!Juego methodsFor: 'operations' stamp: 'PML 11/5/2018 18:56:16'!
+!Juego methodsFor: 'operations' stamp: 'PML 11/5/2018 19:48:52'!
 ubicarFicha: aPoint
 	self chequearPosicionValida: aPoint.
 	turno = $X ifTrue: [
-		jugadasX add: aPoint.
-		self chequearSiGanoX.
+		jugadorX jugarEn: aPoint.
+		ganoX _ jugadorX hasGanado.
 		turno _ $O
 	] ifFalse: [
-		jugadasO add: aPoint.
-		self chequearSiGanoO.
+		jugadorO jugarEn: aPoint..
+		ganoO _ jugadorO hasGanado.
 		turno _ $X
 	]! !
 
@@ -390,9 +391,11 @@ chequearPosicionEnRango: aPoint
 		aPoint y between: 1 and: 3
 	]) ifFalse: [self error: self class errorPosicionInvalida ]! !
 
-!Juego methodsFor: 'private' stamp: 'PML 11/5/2018 19:27:25'!
+!Juego methodsFor: 'private' stamp: 'PML 11/5/2018 19:42:11'!
 chequearPosicionLibre: aPoint
-	(jugadasX, jugadasO includes: aPoint) ifTrue: [
+	((jugadorX tieneFichaEn: aPoint) or: [
+	jugadorO tieneFichaEn: aPoint
+	]) ifTrue: [
 		self error: self class errorPosicionOcupada 
 	].! !
 
@@ -419,15 +422,15 @@ chequearTableroCompleto
 		self error: self class errorFaltanColocarFichas	
 	].! !
 
-!Juego methodsFor: 'private' stamp: 'PML 11/5/2018 19:07:54'!
-chequerPosicionOcupada: aPoint en: jugadas
-	(jugadas includes: aPoint) ifFalse: [
+!Juego methodsFor: 'private' stamp: 'PML 11/5/2018 20:13:31'!
+chequerPosicionOcupada: aPoint por: aJugador 
+	(aJugador tieneFichaEn: aPoint) ifFalse: [
 		self error: self class errorPosicionVacia 
 	].! !
 
-!Juego methodsFor: 'private' stamp: 'PML 11/5/2018 19:25:31'!
+!Juego methodsFor: 'private' stamp: 'PML 11/5/2018 19:37:50'!
 todasLasFichasSobreElTablero
-	^jugadasX size + jugadasO size = 6! !
+	^jugadorX cantidadDeFicasJugadas + jugadorO cantidadDeFicasJugadas = 6! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
@@ -454,3 +457,65 @@ errorPosicionVacia
 !Juego class methodsFor: 'error handling' stamp: 'PML 11/1/2018 20:50:39'!
 errorTodasLasFichasColocadas
 	^'Ya se pusieron todas las fichas, ahora hay que mover'! !
+
+
+!classDefinition: #Jugador category: #TpTerniLapilli!
+Object subclass: #Jugador
+	instanceVariableNames: 'jugadas heGanado'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'TpTerniLapilli'!
+
+!Jugador methodsFor: 'initialization' stamp: 'PML 11/5/2018 19:54:16'!
+initialize
+	jugadas _ OrderedCollection new.
+	heGanado _ false! !
+
+
+!Jugador methodsFor: 'accessing' stamp: 'PML 11/5/2018 19:39:22'!
+cantidadDeFicasJugadas
+	^jugadas size! !
+
+!Jugador methodsFor: 'accessing' stamp: 'PML 11/5/2018 19:50:24'!
+hasGanado
+	self chequearJugadasHorizontales.
+	self chequearJugadasVerticales.
+	self chequearJugadasDiagonal.
+	^heGanado! !
+
+!Jugador methodsFor: 'accessing' stamp: 'PML 11/5/2018 19:42:49'!
+tieneFichaEn: aPoint 
+	^jugadas includes: aPoint! !
+
+
+!Jugador methodsFor: 'operations' stamp: 'PML 11/5/2018 19:44:22'!
+jugarEn: aPoint 
+	jugadas add: aPoint ! !
+
+!Jugador methodsFor: 'operations' stamp: 'PML 11/5/2018 20:26:43'!
+quitarFicha: aPoint 
+	jugadas remove: aPoint ! !
+
+
+!Jugador methodsFor: 'private' stamp: 'PML 11/5/2018 20:01:36'!
+chequearJugadasDiagonal
+	heGanado _ heGanado or: [
+		(jugadas includesAllOf: (OrderedCollection with: 1@1 with: 2@2 with: 3@3)) or:
+		[jugadas includesAllOf: (OrderedCollection with: 3@1 with: 2@2 with: 1@3)]
+	]! !
+
+!Jugador methodsFor: 'private' stamp: 'PML 11/5/2018 19:51:53'!
+chequearJugadasHorizontales
+	(1 to: 3) do: [:aNumber |
+		heGanado _ heGanado or: [(jugadas count: [:aPoint | aPoint x = aNumber ]) = 3].
+	]! !
+
+!Jugador methodsFor: 'private' stamp: 'PML 11/5/2018 19:54:59'!
+chequearJugadasVerticales
+	(1 to: 3) do: [:aNumber |
+		heGanado _ heGanado or: [(jugadas count: [:aPoint | aPoint y = aNumber ]) = 3].
+	]! !
+
+!Jugador methodsFor: 'private' stamp: 'PML 11/5/2018 20:10:06'!
+chequerPosicionOcupada: aPoint 
+	self shouldBeImplemented.! !
