@@ -361,9 +361,9 @@ ubicarFicha: aPoint
 	]! !
 
 
-!Juego methodsFor: 'private' stamp: 'PML 11/5/2018 17:36:08'!
+!Juego methodsFor: 'private' stamp: 'PML 11/5/2018 19:25:50'!
 chequearFichasDisponibles
-	(jugadasX size + jugadasO size = 6) ifTrue: [
+	self todasLasFichasSobreElTablero ifTrue: [
 		self error: self class errorTodasLasFichasColocadas	
 	].! !
 
@@ -390,12 +390,9 @@ chequearPosicionEnRango: aPoint
 		aPoint y between: 1 and: 3
 	]) ifFalse: [self error: self class errorPosicionInvalida ]! !
 
-!Juego methodsFor: 'private' stamp: 'PML 11/5/2018 17:37:32'!
+!Juego methodsFor: 'private' stamp: 'PML 11/5/2018 19:27:25'!
 chequearPosicionLibre: aPoint
-	(jugadasO includes: aPoint) ifTrue: [
-		self error: self class errorPosicionOcupada 
-	].
-	(jugadasX includes: aPoint) ifTrue: [
+	(jugadasX, jugadasO includes: aPoint) ifTrue: [
 		self error: self class errorPosicionOcupada 
 	].! !
 
@@ -416,9 +413,9 @@ chequearSiGanoX
 	self chequearJugadasVerticales: jugadasX yEjecutar: [ganoX _ true].
 	self chequearJugadasDiagonal: jugadasX yEjecutar: [ganoX _ true].! !
 
-!Juego methodsFor: 'private' stamp: 'PML 11/5/2018 18:45:59'!
+!Juego methodsFor: 'private' stamp: 'PML 11/5/2018 19:25:04'!
 chequearTableroCompleto
-	(jugadasX size + jugadasO size = 6) ifFalse: [
+	self todasLasFichasSobreElTablero ifFalse: [
 		self error: self class errorFaltanColocarFichas	
 	].! !
 
@@ -427,6 +424,10 @@ chequerPosicionOcupada: aPoint en: jugadas
 	(jugadas includes: aPoint) ifFalse: [
 		self error: self class errorPosicionVacia 
 	].! !
+
+!Juego methodsFor: 'private' stamp: 'PML 11/5/2018 19:25:31'!
+todasLasFichasSobreElTablero
+	^jugadasX size + jugadasO size = 6! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
