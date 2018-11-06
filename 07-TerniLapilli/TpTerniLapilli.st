@@ -392,63 +392,56 @@ ganoO
 ganoX
 	^jugadorX hasGanado ! !
 
-!Juego methodsFor: 'accessing' stamp: 'PML 11/5/2018 17:24:32'!
+!Juego methodsFor: 'accessing' stamp: 'HGZ 11/5/2018 21:20:40'!
 turno	
-	^turno! !
+	^turno id! !
 
 
-!Juego methodsFor: 'initialization' stamp: 'PML 11/5/2018 19:36:55'!
+!Juego methodsFor: 'initialization' stamp: 'HGZ 11/5/2018 21:32:59'!
 initialize
-	turno _ $X.
-	jugadorX _ Jugador new.
-	jugadorO _ Jugador new.
-	ganoX _ false.
-	ganoO _ false! !
+	jugadorX _ Jugador newWith: $X.
+	jugadorO _ Jugador newWith: $O.
+	turno _ jugadorX.! !
 
 
-!Juego methodsFor: 'operations' stamp: 'PML 11/5/2018 20:48:05'!
+!Juego methodsFor: 'operations' stamp: 'HGZ 11/5/2018 21:33:29'!
 colocarFicha: aPoint
 	self chequearJuegoNoTerminado.
 	self chequearFichasDisponibles.
 	self ubicarFicha: aPoint ! !
 
-!Juego methodsFor: 'operations' stamp: 'PML 11/5/2018 20:54:05'!
+!Juego methodsFor: 'operations' stamp: 'HGZ 11/5/2018 21:23:53'!
 moverFichaDe: desde hacia: hasta
 	self chequearJuegoNoTerminado.
 	self chequearTableroCompleto.
 	self chequearMovimientoValidoEntre: desde y: hasta.
-	turno = $X ifTrue: [
-		self chequearPosicionOcupada: desde por: jugadorX.
-		jugadorX quitarFicha: desde.
-	] ifFalse: [
-		self chequearPosicionOcupada: desde por: jugadorO.
-		jugadorO quitarFicha: desde.
-	].
+	self chequearPosicionOcupada: desde por: turno.
+	turno quitarFicha: desde.
 	self ubicarFicha: hasta! !
 
-!Juego methodsFor: 'operations' stamp: 'PML 11/5/2018 20:59:00'!
+!Juego methodsFor: 'operations' stamp: 'HGZ 11/5/2018 21:26:44'!
 ubicarFicha: aPoint
 	self chequearPosicionValida: aPoint.
-	turno = $X ifTrue: [
-		jugadorX jugarEn: aPoint.
-		jugadorX hasGanado.
-		turno _ $O
+	turno jugarEn: aPoint.
+	turno hasGanado.
+	turno = jugadorX ifTrue: [
+		turno _ jugadorO
 	] ifFalse: [
-		jugadorO jugarEn: aPoint..
-		jugadorO hasGanado.
-		turno _ $X
+		turno _ jugadorX
 	]! !
 
 
-!Juego methodsFor: 'private' stamp: 'PML 11/5/2018 19:25:50'!
+!Juego methodsFor: 'private' stamp: 'HGZ 11/5/2018 21:37:27'!
 chequearFichasDisponibles
 	self todasLasFichasSobreElTablero ifTrue: [
-		self error: self class errorTodasLasFichasColocadas	
+		self error: self class errorTodasLasFichasColocadas
 	].! !
 
-!Juego methodsFor: 'private' stamp: 'PML 11/5/2018 20:49:15'!
+!Juego methodsFor: 'private' stamp: 'HGZ 11/5/2018 21:36:40'!
 chequearJuegoNoTerminado
-	(jugadorX hasGanado or: [jugadorO hasGanado ]) ifTrue: [self error: self class errorJuegoTerminado ]! !
+	(jugadorX hasGanado or: [jugadorO hasGanado]) ifTrue: [
+		self error: self class errorJuegoTerminado 	
+	].! !
 
 !Juego methodsFor: 'private' stamp: 'PML 11/5/2018 20:41:04'!
 chequearMovimientoValidoEntre: desde y: hasta
@@ -529,13 +522,14 @@ errorTodasLasFichasColocadas
 
 !classDefinition: #Jugador category: #TpTerniLapilli!
 Object subclass: #Jugador
-	instanceVariableNames: 'jugadas heGanado'
+	instanceVariableNames: 'jugadas heGanado id'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'TpTerniLapilli'!
 
-!Jugador methodsFor: 'initialization' stamp: 'PML 11/5/2018 19:54:16'!
-initialize
+!Jugador methodsFor: 'initialization' stamp: 'HGZ 11/5/2018 21:21:30'!
+initializeWith: aCharacter
+	id _ aCharacter.
 	jugadas _ OrderedCollection new.
 	heGanado _ false! !
 
@@ -550,6 +544,10 @@ hasGanado
 	self chequearJugadasVerticales.
 	self chequearJugadasDiagonal.
 	^heGanado! !
+
+!Jugador methodsFor: 'accessing' stamp: 'HGZ 11/5/2018 21:20:53'!
+id
+	^id! !
 
 !Jugador methodsFor: 'accessing' stamp: 'PML 11/5/2018 19:42:49'!
 tieneFichaEn: aPoint 
@@ -587,3 +585,13 @@ chequearJugadasVerticales
 !Jugador methodsFor: 'private' stamp: 'PML 11/5/2018 20:10:06'!
 chequerPosicionOcupada: aPoint 
 	self shouldBeImplemented.! !
+
+"-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
+
+!classDefinition: 'Jugador class' category: #TpTerniLapilli!
+Jugador class
+	instanceVariableNames: ''!
+
+!Jugador class methodsFor: 'instance creation' stamp: 'HGZ 11/5/2018 21:22:09'!
+newWith: aCharacer
+	^self new initializeWith: aCharacer ! !
