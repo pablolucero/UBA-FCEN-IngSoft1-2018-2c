@@ -165,8 +165,8 @@ test14OGanaPorDiagonal
 	self assert: juego ganoO.
 	self deny: juego ganoX! !
 
-!TerniLapilliTests methodsFor: 'tests' stamp: 'PML 11/5/2018 18:17:07'!
-test15NoSePuedenPonerFicasFueraDelTablero
+!TerniLapilliTests methodsFor: 'tests' stamp: 'PML 11/5/2018 20:52:26'!
+test15NoSePuedenPonerFichasFueraDelTablero
 	|juego|
 	juego _ Juego new.
 	
@@ -295,27 +295,102 @@ test22OGanaPorColumna
 
 	! !
 
+!TerniLapilliTests methodsFor: 'tests' stamp: 'PML 11/5/2018 20:43:17'!
+test23NoSePuedeMoverAUnaPosicionNoAdyacente1
+	|juego|
+	juego _ Juego new.
+	
+	juego colocarFicha: 1@1.
+	juego colocarFicha: 3@1.
+	juego colocarFicha: 1@3.
+	juego colocarFicha: 3@2.
+	juego colocarFicha: 2@2.
+	juego colocarFicha: 2@3.
+	
+	self should: [ juego moverFichaDe: 1@1 hacia: 3@3. ] 
+	raise: Error - MessageNotUnderstood 
+	withExceptionDo: [ :anError | 
+			self assert: anError messageText = Juego errorMovimientoInvalido]
+
+	! !
+
+!TerniLapilliTests methodsFor: 'tests' stamp: 'PML 11/5/2018 20:44:20'!
+test24NoSePuedeMoverAUnaPosicionNoAdyacente2
+	|juego|
+	juego _ Juego new.
+	
+	juego colocarFicha: 1@1.
+	juego colocarFicha: 3@1.
+	juego colocarFicha: 1@3.
+	juego colocarFicha: 3@2.
+	juego colocarFicha: 2@1.
+	juego colocarFicha: 2@3.
+	
+	self should: [ juego moverFichaDe: 2@1 hacia: 1@2. ] 
+	raise: Error - MessageNotUnderstood 
+	withExceptionDo: [ :anError | 
+			self assert: anError messageText = Juego errorMovimientoInvalido]
+
+	! !
+
+!TerniLapilliTests methodsFor: 'tests' stamp: 'PML 11/5/2018 20:46:09'!
+test25NoSePuedeColocarFichaSiElJuegoYaTermino
+	|juego|
+	juego _ Juego new.
+	
+	juego colocarFicha: 1@1.
+	juego colocarFicha: 2@1.
+	juego colocarFicha: 1@2.
+	juego colocarFicha: 2@2.
+	juego colocarFicha: 1@3.
+	
+	self should: [ juego colocarFicha: 3@3. ] 
+	raise: Error - MessageNotUnderstood 
+	withExceptionDo: [ :anError | 
+			self assert: anError messageText = Juego errorJuegoTerminado]
+
+	! !
+
+!TerniLapilliTests methodsFor: 'tests' stamp: 'PML 11/5/2018 20:50:49'!
+test26NoSePuedeMoverFichaSiElJuegoYaTermino
+	|juego|
+	juego _ Juego new.
+	
+	juego colocarFicha: 1@1.
+	juego colocarFicha: 2@1.
+	juego colocarFicha: 1@2.
+	juego colocarFicha: 2@2.
+	juego colocarFicha: 3@3.
+	juego colocarFicha: 2@3.
+	
+	self should: [ juego moverFichaDe: 3@3 hacia: 3@2. ] 
+	raise: Error - MessageNotUnderstood 
+	withExceptionDo: [ :anError | 
+			self assert: anError messageText = Juego errorJuegoTerminado]
+
+	! !
+
 
 !classDefinition: #Juego category: #TpTerniLapilli!
 Object subclass: #Juego
-	instanceVariableNames: 'turno jugadorX jugadorO ganoX ganoO'
+	instanceVariableNames: 'turno jugadorX jugadorO'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'TpTerniLapilli'!
 
-!Juego methodsFor: 'accessing' stamp: 'PML 11/5/2018 20:02:51'!
+!Juego methodsFor: 'accessing' stamp: 'PML 11/5/2018 20:56:38'!
 fichaEnPosicion: aPoint
 	(jugadorX tieneFichaEn: aPoint) ifTrue: [^$X].
-	(jugadorX tieneFichaEn: aPoint) ifTrue: [^$O].
+	(jugadorO tieneFichaEn: aPoint) ifTrue: [^$O].
 	^$_! !
 
-!Juego methodsFor: 'accessing' stamp: 'PML 11/5/2018 17:19:42'!
+!Juego methodsFor: 'accessing' stamp: 'PML 11/5/2018 20:59:25'!
 ganoO
-	^ganoO! !
+	^jugadorO hasGanado ! !
 
-!Juego methodsFor: 'accessing' stamp: 'PML 11/5/2018 17:17:08'!
+!Juego methodsFor: 'accessing' stamp: 'PML 11/5/2018 20:59:34'!
 ganoX
-	^ganoX! !
+	^jugadorX hasGanado ! !
 
 !Juego methodsFor: 'accessing' stamp: 'PML 11/5/2018 17:24:32'!
 turno	
@@ -331,33 +406,36 @@ initialize
 	ganoO _ false! !
 
 
-!Juego methodsFor: 'operations' stamp: 'PML 11/5/2018 18:50:43'!
+!Juego methodsFor: 'operations' stamp: 'PML 11/5/2018 20:48:05'!
 colocarFicha: aPoint
+	self chequearJuegoNoTerminado.
 	self chequearFichasDisponibles.
 	self ubicarFicha: aPoint ! !
 
-!Juego methodsFor: 'operations' stamp: 'PML 11/5/2018 20:28:14'!
+!Juego methodsFor: 'operations' stamp: 'PML 11/5/2018 20:54:05'!
 moverFichaDe: desde hacia: hasta
+	self chequearJuegoNoTerminado.
 	self chequearTableroCompleto.
+	self chequearMovimientoValidoEntre: desde y: hasta.
 	turno = $X ifTrue: [
-		self chequerPosicionOcupada: desde por: jugadorX.
+		self chequearPosicionOcupada: desde por: jugadorX.
 		jugadorX quitarFicha: desde.
 	] ifFalse: [
-		self chequerPosicionOcupada: desde por: jugadorO.
+		self chequearPosicionOcupada: desde por: jugadorO.
 		jugadorO quitarFicha: desde.
 	].
 	self ubicarFicha: hasta! !
 
-!Juego methodsFor: 'operations' stamp: 'PML 11/5/2018 19:48:52'!
+!Juego methodsFor: 'operations' stamp: 'PML 11/5/2018 20:59:00'!
 ubicarFicha: aPoint
 	self chequearPosicionValida: aPoint.
 	turno = $X ifTrue: [
 		jugadorX jugarEn: aPoint.
-		ganoX _ jugadorX hasGanado.
+		jugadorX hasGanado.
 		turno _ $O
 	] ifFalse: [
 		jugadorO jugarEn: aPoint..
-		ganoO _ jugadorO hasGanado.
+		jugadorO hasGanado.
 		turno _ $X
 	]! !
 
@@ -368,22 +446,16 @@ chequearFichasDisponibles
 		self error: self class errorTodasLasFichasColocadas	
 	].! !
 
-!Juego methodsFor: 'private' stamp: 'PML 11/5/2018 18:31:30'!
-chequearJugadasDiagonal: jugadas yEjecutar: bloqueAEjecutar
-	((jugadas includesAllOf: (OrderedCollection with: 1@1 with: 2@2 with: 3@3)) or:
-	[jugadas includesAllOf: (OrderedCollection with: 3@1 with: 2@2 with: 1@3)]) ifTrue: bloqueAEjecutar.! !
+!Juego methodsFor: 'private' stamp: 'PML 11/5/2018 20:49:15'!
+chequearJuegoNoTerminado
+	(jugadorX hasGanado or: [jugadorO hasGanado ]) ifTrue: [self error: self class errorJuegoTerminado ]! !
 
-!Juego methodsFor: 'private' stamp: 'PML 11/5/2018 18:23:59'!
-chequearJugadasHorizontales: jugadas yEjecutar: bloqueAEjecutar
-	(1 to: 3) do: [:aNumber |
-		(jugadas count: [:aPoint | aPoint x = aNumber ]) = 3 ifTrue: bloqueAEjecutar .
-	]! !
-
-!Juego methodsFor: 'private' stamp: 'PML 11/5/2018 18:29:21'!
-chequearJugadasVerticales: jugadas yEjecutar: bloqueAEjecutar
-	(1 to: 3) do: [:aNumber |
-		(jugadas count: [:aPoint | aPoint y = aNumber ]) = 3 ifTrue: bloqueAEjecutar .
-	]! !
+!Juego methodsFor: 'private' stamp: 'PML 11/5/2018 20:41:04'!
+chequearMovimientoValidoEntre: desde y: hasta
+	(desde x - hasta x) abs > 1 ifTrue: [self error: self class errorMovimientoInvalido ].
+	(desde y - hasta y) abs > 1 ifTrue: [self error: self class errorMovimientoInvalido ].
+	(((desde x - desde y) abs = 1) and: [
+	(hasta x - hasta y) abs = 1]) ifTrue: [self error: self class errorMovimientoInvalido ].! !
 
 !Juego methodsFor: 'private' stamp: 'PML 11/5/2018 18:55:20'!
 chequearPosicionEnRango: aPoint
@@ -399,33 +471,21 @@ chequearPosicionLibre: aPoint
 		self error: self class errorPosicionOcupada 
 	].! !
 
+!Juego methodsFor: 'private' stamp: 'PML 11/5/2018 20:54:05'!
+chequearPosicionOcupada: aPoint por: aJugador 
+	(aJugador tieneFichaEn: aPoint) ifFalse: [
+		self error: self class errorPosicionVacia 
+	].! !
+
 !Juego methodsFor: 'private' stamp: 'PML 11/5/2018 18:56:03'!
 chequearPosicionValida: aPoint
 	self chequearPosicionEnRango: aPoint.
 	self chequearPosicionLibre: aPoint.! !
 
-!Juego methodsFor: 'private' stamp: 'PML 11/5/2018 18:31:57'!
-chequearSiGanoO
-	self chequearJugadasHorizontales: jugadasO yEjecutar: [ganoO _ true].
-	self chequearJugadasVerticales: jugadasO yEjecutar: [ganoO _ true].
-	self chequearJugadasDiagonal: jugadasO yEjecutar: [ganoO _ true].! !
-
-!Juego methodsFor: 'private' stamp: 'PML 11/5/2018 18:32:13'!
-chequearSiGanoX
-	self chequearJugadasHorizontales: jugadasX yEjecutar: [ganoX _ true].
-	self chequearJugadasVerticales: jugadasX yEjecutar: [ganoX _ true].
-	self chequearJugadasDiagonal: jugadasX yEjecutar: [ganoX _ true].! !
-
 !Juego methodsFor: 'private' stamp: 'PML 11/5/2018 19:25:04'!
 chequearTableroCompleto
 	self todasLasFichasSobreElTablero ifFalse: [
 		self error: self class errorFaltanColocarFichas	
-	].! !
-
-!Juego methodsFor: 'private' stamp: 'PML 11/5/2018 20:13:31'!
-chequerPosicionOcupada: aPoint por: aJugador 
-	(aJugador tieneFichaEn: aPoint) ifFalse: [
-		self error: self class errorPosicionVacia 
 	].! !
 
 !Juego methodsFor: 'private' stamp: 'PML 11/5/2018 19:37:50'!
@@ -441,6 +501,14 @@ Juego class
 !Juego class methodsFor: 'error handling' stamp: 'PML 11/5/2018 18:37:35'!
 errorFaltanColocarFichas
 	^'Hay que colocar todas las fichas antes de empezar a moverlas'! !
+
+!Juego class methodsFor: 'error handling' stamp: 'PML 11/5/2018 20:46:42'!
+errorJuegoTerminado
+	^'No se puede seguir jugando porque el juego ya terminó'! !
+
+!Juego class methodsFor: 'error handling' stamp: 'PML 11/5/2018 20:33:50'!
+errorMovimientoInvalido
+	^'No se puede mover una ficha en esa dirección'! !
 
 !Juego class methodsFor: 'error handling' stamp: 'PML 11/5/2018 18:17:39'!
 errorPosicionInvalida
