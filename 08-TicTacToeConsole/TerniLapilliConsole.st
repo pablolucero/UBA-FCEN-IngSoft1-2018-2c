@@ -16,7 +16,7 @@ test01afterFirstMarkConsoleShouldInformIsPlayingO
 	self
 		assert: console lines size
 		equals: 2.
-	self assert: (lines at: 1) = 'X marcó en 2@2'.
+	self assert: (lines at: 1) = 'X marcÃ³ en 2@2'.
 	self assert: (lines at: 2) = 'Estado: Jugando O'.! !
 
 !TerniLapilliConsoleTest methodsFor: 'tests' stamp: 'HGZ 11/11/2018 18:34:29'!
@@ -31,9 +31,9 @@ test02afterSecondMarkConsoleShouldInformIsPlayingX
 	self
 		assert: lines size
 		equals: 4.
-	self assert: (lines at: 1) = 'X marcó en 2@2'.
+	self assert: (lines at: 1) = 'X marcÃ³ en 2@2'.
 	self assert: (lines at: 2) = 'Estado: Jugando O'.
-	self assert: (lines at: 3) = 'O marcó en 1@1'.
+	self assert: (lines at: 3) = 'O marcÃ³ en 1@1'.
 	self assert: (lines at: 4) = 'Estado: Jugando X'.! !
 
 !TerniLapilliConsoleTest methodsFor: 'tests' stamp: 'HGZ 11/11/2018 18:34:29'!
@@ -51,16 +51,16 @@ test03afterXWonConsoleShouldInformXWon
 	self
 		assert: lines size
 		equals: 10.
-	self assert: (lines at: 1) = 'X marcó en 2@2'.
+	self assert: (lines at: 1) = 'X marcÃ³ en 2@2'.
 	self assert: (lines at: 2) = 'Estado: Jugando O'.
-	self assert: (lines at: 3) = 'O marcó en 1@1'.
+	self assert: (lines at: 3) = 'O marcÃ³ en 1@1'.
 	self assert: (lines at: 4) = 'Estado: Jugando X'.
-	self assert: (lines at: 5) = 'X marcó en 1@3'.
+	self assert: (lines at: 5) = 'X marcÃ³ en 1@3'.
 	self assert: (lines at: 6) = 'Estado: Jugando O'.
-	self assert: (lines at: 7) = 'O marcó en 1@2'.
+	self assert: (lines at: 7) = 'O marcÃ³ en 1@2'.
 	self assert: (lines at: 8) = 'Estado: Jugando X'.
-	self assert: (lines at: 9) = 'X marcó en 3@1'.
-	self assert: (lines at: 10) = 'Estado: Juego terminado - Ganó X!!'.! !
+	self assert: (lines at: 9) = 'X marcÃ³ en 3@1'.
+	self assert: (lines at: 10) = 'Estado: Juego terminado - GanÃ³ X!!'.! !
 
 !TerniLapilliConsoleTest methodsFor: 'tests' stamp: 'HGZ 11/11/2018 18:34:29'!
 test04afterOWonConsoleShouldInformOWon
@@ -78,18 +78,18 @@ test04afterOWonConsoleShouldInformOWon
 	self
 		assert: lines size
 		equals: 12.
-	self assert: (lines at: 1) = 'X marcó en 2@2'.
+	self assert: (lines at: 1) = 'X marcÃ³ en 2@2'.
 	self assert: (lines at: 2) = 'Estado: Jugando O'.
-	self assert: (lines at: 3) = 'O marcó en 1@1'.
+	self assert: (lines at: 3) = 'O marcÃ³ en 1@1'.
 	self assert: (lines at: 4) = 'Estado: Jugando X'.
-	self assert: (lines at: 5) = 'X marcó en 3@2'.
+	self assert: (lines at: 5) = 'X marcÃ³ en 3@2'.
 	self assert: (lines at: 6) = 'Estado: Jugando O'.
-	self assert: (lines at: 7) = 'O marcó en 1@2'.
+	self assert: (lines at: 7) = 'O marcÃ³ en 1@2'.
 	self assert: (lines at: 8) = 'Estado: Jugando X'.
-	self assert: (lines at: 9) = 'X marcó en 3@3'.
+	self assert: (lines at: 9) = 'X marcÃ³ en 3@3'.
 	self assert: (lines at: 10) = 'Estado: Jugando O'.
-	self assert: (lines at: 11) = 'O marcó en 1@3'.
-	self assert: (lines at: 12) = 'Estado: Juego terminado - Ganó O!!'.! !
+	self assert: (lines at: 11) = 'O marcÃ³ en 1@3'.
+	self assert: (lines at: 12) = 'Estado: Juego terminado - GanÃ³ O!!'.! !
 
 !TerniLapilliConsoleTest methodsFor: 'tests' stamp: 'HGZ 11/11/2018 18:34:29'!
 test05afterGameTiedConsoleShouldInformGameTied
@@ -110,23 +110,23 @@ test05afterGameTiedConsoleShouldInformGameTied
 	self
 		assert: lines size
 		equals: 18.
-	self assert: (lines at: 1) = 'X marcó en 2@2'.
+	self assert: (lines at: 1) = 'X marcÃ³ en 2@2'.
 	self assert: (lines at: 2) = 'Estado: Jugando O'.
-	self assert: (lines at: 3) = 'O marcó en 1@1'.
+	self assert: (lines at: 3) = 'O marcÃ³ en 1@1'.
 	self assert: (lines at: 4) = 'Estado: Jugando X'.
-	self assert: (lines at: 5) = 'X marcó en 3@2'.
+	self assert: (lines at: 5) = 'X marcÃ³ en 3@2'.
 	self assert: (lines at: 6) = 'Estado: Jugando O'.
-	self assert: (lines at: 7) = 'O marcó en 1@2'.
+	self assert: (lines at: 7) = 'O marcÃ³ en 1@2'.
 	self assert: (lines at: 8) = 'Estado: Jugando X'.
-	self assert: (lines at: 9) = 'X marcó en 3@3'.
+	self assert: (lines at: 9) = 'X marcÃ³ en 3@3'.
 	self assert: (lines at: 10) = 'Estado: Jugando O'.
-	self assert: (lines at: 11) = 'O marcó en 3@1'.
+	self assert: (lines at: 11) = 'O marcÃ³ en 3@1'.
 	self assert: (lines at: 12) = 'Estado: Jugando X'.
-	self assert: (lines at: 13) = 'X marcó en 2@1'.
+	self assert: (lines at: 13) = 'X marcÃ³ en 2@1'.
 	self assert: (lines at: 14) = 'Estado: Jugando O'.
-	self assert: (lines at: 15) = 'O marcó en 2@3'.
+	self assert: (lines at: 15) = 'O marcÃ³ en 2@3'.
 	self assert: (lines at: 16) = 'Estado: Jugando X'.
-	self assert: (lines at: 17) = 'X marcó en 1@3'.
+	self assert: (lines at: 17) = 'X marcÃ³ en 1@3'.
 	self assert: (lines at: 18) = 'Estado: Juego terminado - Empate!!'.! !
 
 
@@ -944,7 +944,6 @@ informLastActionOn: aListener
 
 !TerniLapilli methodsFor: 'binding' stamp: 'HGZ 11/11/2018 19:18:54'!
 register: anObserver
-	"listeners add: aListener."
 	state register: anObserver.! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
@@ -1042,28 +1041,28 @@ lines
 
 !TerniLapilliConsole methodsFor: 'state update' stamp: 'HGZ 11/11/2018 22:43:57'!
 gameTiedStateIn: aTerniLapilli 
-	log add:  'X marcó en ', aTerniLapilli lastPlay asString.
+	log add:  'X marcÃ³ en ', aTerniLapilli lastPlay asString.
 	log add: 'Estado: Juego terminado - Empate!!'.
 ! !
 
 !TerniLapilliConsole methodsFor: 'state update' stamp: 'HGZ 11/11/2018 22:41:51'!
 playerOWonStateIn: aTerniLapilli 
-	log add:  'O marcó en ', aTerniLapilli lastPlay asString.
-	log add: 'Estado: Juego terminado - Ganó O!!'.! !
+	log add:  'O marcÃ³ en ', aTerniLapilli lastPlay asString.
+	log add: 'Estado: Juego terminado - GanÃ³ O!!'.! !
 
 !TerniLapilliConsole methodsFor: 'state update' stamp: 'HGZ 11/11/2018 22:40:51'!
 playerXWonStateIn: aTerniLapilli
-	log add: 'X marcó en ' , aTerniLapilli lastPlay asString.
-	log add: 'Estado: Juego terminado - Ganó X!!'.! !
+	log add: 'X marcÃ³ en ' , aTerniLapilli lastPlay asString.
+	log add: 'Estado: Juego terminado - GanÃ³ X!!'.! !
 
 !TerniLapilliConsole methodsFor: 'state update' stamp: 'HGZ 11/11/2018 22:24:19'!
 playingOStateIn: aTerniLapilli 
-	log add:  'X marcó en ', aTerniLapilli lastPlay asString.
+	log add:  'X marcÃ³ en ', aTerniLapilli lastPlay asString.
 	log add: 'Estado: Jugando O'.! !
 
 !TerniLapilliConsole methodsFor: 'state update' stamp: 'HGZ 11/11/2018 22:34:35'!
 playingXStateIn: aTerniLapilli 
-	log add:  'O marcó en ', aTerniLapilli lastPlay asString.
+	log add:  'O marcÃ³ en ', aTerniLapilli lastPlay asString.
 	log add: 'Estado: Jugando X'.! !
 
 
