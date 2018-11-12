@@ -761,10 +761,7 @@ add: aPosition to: positions nextPlayerState: nextPlayingState winnerState: winn
 	positions add: aPosition.
 	
 	lastPlay _ aPosition.
-	state updateStateAfterAddingTo: positions with: nextPlayingState and: winnerState for: self.
-	"listeners do: [
-		:aListener | aListener updateWith: self.
-	]"! !
+	state updateStateAfterAddingTo: positions with: nextPlayingState and: winnerState for: self.! !
 
 !TerniLapilli methodsFor: 'marking board - private' stamp: 'HAW 10/25/2017 15:35:08'!
 assertIsFree: aPosition
