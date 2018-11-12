@@ -726,7 +726,6 @@ initialize
 	playerXPositions _ OrderedCollection new.
 	playerOPositions _ OrderedCollection new.
 	state _ ActiveVariable for: (PlayingX for: self).
-	listeners _ OrderedCollection new.
 	
 	lastPlay _ nil.! !
 
