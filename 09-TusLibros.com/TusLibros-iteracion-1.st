@@ -89,7 +89,7 @@ Object subclass: #Carrito
 cantidadDeItemsDistintos
 	^items size.! !
 
-!Carrito methodsFor: 'testing' stamp: 'PML 11/12/2018 21:06:08'!
+!Carrito methodsFor: 'testing' stamp: 'PML 11/13/2018 01:43:25'!
 cantidadTotalDeItems
 	^items keys inject: 0 into: [ :total :unISBN | total + (items at: unISBN) ].! !
 
@@ -107,7 +107,7 @@ verificarQueElLibroEsteEnCatalogo: unISBN
 	(catalogo includes: unISBN) ifFalse: [ self error: self class noSePuedeAgregarUnLibroFueraDelCatalogo ]. ! !
 
 
-!Carrito methodsFor: 'operations' stamp: 'PML 11/12/2018 21:39:55'!
+!Carrito methodsFor: 'operations' stamp: 'PML 11/13/2018 01:44:39'!
 agregar: unaCantidad unidadesDe: unISBN 
 	self verificarQueElLibroEsteEnCatalogo: unISBN.
 	items at: unISBN put: unaCantidad + (items at: unISBN ifAbsent: [0]).! !
@@ -117,10 +117,10 @@ agregarLibro: unISBN
 	self agregar: 1 unidadesDe: unISBN.! !
 
 
-!Carrito methodsFor: 'initialization' stamp: 'PML 11/12/2018 21:38:38'!
+!Carrito methodsFor: 'initialization' stamp: 'PML 11/13/2018 11:23:58'!
 initialize
 	items _ Dictionary new.
-	catalogo _ Set with: '12345' with: '67890' .! !
+	catalogo _ Catalogo getListadoDeIsbnDeLibros.! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
@@ -128,6 +128,24 @@ initialize
 Carrito class
 	instanceVariableNames: ''!
 
-!Carrito class methodsFor: 'nil' stamp: 'PML 11/12/2018 21:33:18'!
+!Carrito class methodsFor: 'error messages' stamp: 'PML 11/12/2018 21:33:18'!
 noSePuedeAgregarUnLibroFueraDelCatalogo
 	^'no se puede agregar un libro fuera del catálogo'! !
+
+
+!classDefinition: #Catalogo category: #TusLibros!
+Object subclass: #Catalogo
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'TusLibros'!
+
+"-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
+
+!classDefinition: 'Catalogo class' category: #TusLibros!
+Catalogo class
+	instanceVariableNames: ''!
+
+!Catalogo class methodsFor: 'accessing' stamp: 'PML 11/13/2018 11:21:47'!
+getListadoDeIsbnDeLibros
+	^ Set with: '12345' with: '67890'.! !
